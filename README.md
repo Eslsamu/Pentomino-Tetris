@@ -1,1 +1,1 @@
-# Penomino-Tetris
+# Pentomino-Tetris
