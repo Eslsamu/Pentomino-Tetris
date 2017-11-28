@@ -1,0 +1,32 @@
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Rectangle;
+
+public class Controlls{
+    BackendGrid backendGrid;
+    public Controlls(BackendGrid backendGrid){
+        this.backendGrid = backendGrid;
+    }
+    public EventHandler setControls(){
+    EventHandler<KeyEvent> eventHandler = new EventHandler<KeyEvent>() { 
+            @Override 
+            public void handle(KeyEvent event) {                 
+                if(event.getCode() == KeyCode.RIGHT) {   	
+		    backendGrid.move(Direction.RIGHT);
+                }
+                if(event.getCode() == KeyCode.LEFT) {
+                   backendGrid.move(Direction.LEFT); 
+                }
+                if(event.getCode() == KeyCode.UP) {
+                   backendGrid.move(Direction.CLOCKWISE); 
+                }
+                if(event.getCode() == KeyCode.DOWN) {
+                   backendGrid.move(Direction.COUNTERCLOCKWISE);
+                }
+            } 
+        };
+        return eventHandler;
+    }
+}
