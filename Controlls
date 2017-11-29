@@ -1,3 +1,5 @@
+package petris;
+
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -24,6 +26,11 @@ public class Controlls{
                 }
                 if(event.getCode() == KeyCode.DOWN) {
                    backendGrid.move(Direction.COUNTERCLOCKWISE);
+                }
+                if(event.getCode() == KeyCode.SPACE){
+                    while(!backendGrid.doesCollide(Direction.DOWN)){
+                        backendGrid.move(Direction.DOWN);
+                    }
                 }
             } 
         };
