@@ -1,3 +1,5 @@
+package petris;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -8,12 +10,17 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception{
-		View gui = new View();
-		primaryStage.setTitle("Petris");
-		primaryStage.setScene(gui.getScene());
+                //create an instance of BackendGrid
 		BackendGrid backendGrid = new BackendGrid();
-		primaryStage.show();
-                backendGrid.start();
+                //create an instance of GameCycle
+                GameCycle gameCycle = new GameCycle(backendGrid);
+                
+		primaryStage.setTitle("Petris");
+                //get the scene from GameCycle
+		primaryStage.setScene(gameCycle.getScene());
+		primaryStage.setMaxWidth(600);
+                primaryStage.setMinWidth(600);
+                primaryStage.show();
 	}
 	
 	public static void main(String[]args) {
