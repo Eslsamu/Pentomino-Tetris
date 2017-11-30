@@ -1,11 +1,10 @@
-
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.util.Duration;
 
 public class GameCycle{
+	
     //two timelines, one updates the game every 60ms, the other drops pento down starting from 500ms
     private Timeline update;
     private Timeline gameCycle;
@@ -31,9 +30,9 @@ public class GameCycle{
             gameCycle.stop();
         }
         //even if game has stopped we will still update the game one last time
-        gui.updatePentomino();
         gui.updateData();
-        gui.updateGameBoard();
+        gui.drawGrid();
+        gui.drawNextBlock();
     }
     public Scene getScene(){
         //this method gets the Scene from the GUI and calls the cycle method which creates and starts the two timelines
