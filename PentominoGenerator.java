@@ -37,7 +37,7 @@ public class PentominoGenerator {
 		int index = (int) (Math.random()*12);
 		Color ranColor = Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*254)); //254 to leave space for an exception store
 		Pentomino random = new Pentomino(pentominoList.get(index),ranColor); 
-                return random;
+        return random;
 	}
 
 	public Pentomino getTestPentomino(){
