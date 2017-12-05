@@ -1,5 +1,3 @@
-package petris;
-
 import javafx.animation.Animation;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -11,7 +9,7 @@ public class Controlls{
         this.backendGrid = backendGrid;
     }
     public EventHandler setControls(){
-    GameCycle gameCycle = new GameCycle(backendGrid);
+    GameCycle gameCycle = new GameCycle();
     EventHandler<KeyEvent> eventHandler = (KeyEvent event) -> {
         if(event.getCode() == KeyCode.RIGHT) {
             backendGrid.move(Direction.RIGHT);
