@@ -1,5 +1,3 @@
-package petris;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
@@ -14,20 +12,20 @@ public class GameCycle{
     BackendGrid backendGrid;
     GUI gui;
     
-    public GameCycle(BackendGrid backendGrid){
-        //use the instance of BackendGrid from Main
-        this.backendGrid = backendGrid;
+    public GameCycle(){
+        backendGrid = new BackendGrid(true);
         //create an instance of GUI
         gui = new GUI(backendGrid);
         
-        //start the game by spawning a pentomino
-        backendGrid.spawn();
+        backendGrid.startGame();
     }
+    
+
     
     public void updateGUI(){
         //this method updates the GUI whenever it is called
         //if gameOverCheck() returns false the two timelines will stop therefore the whole game stops
-        if(backendGrid.gameOverCheck()){
+        if(!backendGrid.getIsRunning()){
             update.stop();
             gameCycle.stop();
         }
