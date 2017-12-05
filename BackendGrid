@@ -1,10 +1,9 @@
-package petris;
-
 import java.util.ArrayList;
+
 import javafx.scene.paint.Color;
 
 
-public class BackendGrid{
+public class BackendGrid extends FloodFill{
     private final int HEIGHT = 15;
     private final int WIDTH = 5;
     
@@ -12,22 +11,53 @@ public class BackendGrid{
     private int score = 0;
     private int rowsCleared = 0;
     private double delay = 500.0;
-    private final double speedIncrease = 0.8;
+    private double speedIncrease = 0.8;
+    
+    private boolean isRunning = false; //+ get&setters
+    private boolean hasBot = false;
+    
+    
    
     private Color[][] gridMatrix;
     private Pentomino fallingBlock;
     private Pentomino nextBlock;
+    private Agent agent;
     
     public BackendGrid() {
     	gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
+        this.hasBot = false;
     }
     
-    public BackendGrid(int height, int width){
+    public BackendGrid(boolean bot) {
+    	gridMatrix = new Color[HEIGHT][WIDTH];
+    	PentominoGenerator startGenerator = new PentominoGenerator();
+        nextBlock = startGenerator.getRandomPentomino();   
+        this.hasBot = bot;
+        if(bot) {
+        	agent = new Agent(this);
+        	delay = 3000;
+        	speedIncrease = 1;
+        }
+    }
+    
+    public BackendGrid(int height, int width,boolean bot){
         gridMatrix = new Color[height][width];
         PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
+        this.hasBot = bot;
+        if(bot) {
+        	agent = new Agent(this);
+        }
+    }
+    
+    public boolean getIsRunning() {
+    	return isRunning;
+    }
+    
+    public void setIsRunning(boolean r) {
+    	isRunning = r;
     }
     
     public Pentomino getFallingBlock() {
@@ -56,10 +86,21 @@ public class BackendGrid{
     public double getSpeed(){
         return delay;
     }
+    
+    public void startGame() {
+    	isRunning = true;
+    	spawn();
+    }
+    
     public boolean gameOverCheck() {
-        int[][] coordinates = fallingBlock.getCoordinates();
+        //gives errors, to be fixed
+        int[][] coordinates = nextBlock.getCoordinates();
         for (int i = 0; i < coordinates[0].length; i++){
            if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {
+    		//fallingBlock = null; //currently not needed
+    		System.out.println("GameOver"); //will be printed twice due to double use of gameOverCheck(), which is needed
+    		hasBot = false; //stop the bot from making a new move
+    		isRunning = false;
                 return true;
             }              
     	} 
@@ -67,9 +108,15 @@ public class BackendGrid{
     }
     
     public void spawn() {
+    	if(!isRunning) {
+    		return;
+    	}
     	fallingBlock = nextBlock;
     	PentominoGenerator startGenerator = new PentominoGenerator();
-        nextBlock = startGenerator.getRandomPentomino();        
+        nextBlock = startGenerator.getRandomPentomino();    
+        if(hasBot) {
+        	agent.makeMove(this);
+        }
     }
     
     public void move(Direction aDirection){
@@ -166,7 +213,6 @@ public class BackendGrid{
                 if(checkCoords[1][i] + 1 >= gridMatrix.length || gridMatrix[ checkCoords[1][i] + 1 ][ checkCoords[0][i] ]!=null){
                    //here a new block gets created as it fell down to the ground
                    placePento(fallingBlock);
-                   spawn();
                    clearRows();
                    return true;
                 }
@@ -212,6 +258,10 @@ public class BackendGrid{
             for(int i = 0; i < whereToPlace[0].length; i++){
                 gridMatrix[whereToPlace[1][i]][whereToPlace[0][i]] = colorIndex;
             }
+            gameOverCheck();
+            if(isRunning) {
+            	spawn();
+            }
     }
     
     public void levelUp() {
@@ -226,7 +276,7 @@ public class BackendGrid{
         for(int i = 0; i < gridMatrix.length; i++){
             boolean isRowFull = true;
             for(int j=0;j<gridMatrix[0].length;j++){
-                if(gridMatrix[i][j] == null){
+                if(gridMatrix[i][j]==null){
                     isRowFull = false;
                 }
             }
@@ -242,20 +292,26 @@ public class BackendGrid{
         ArrayList<Integer> rowsToClear = rowsToClear();
         //if there are no rows to clear, then nothing happens (because rowToClear.size = 0)
         while(rowsToClear.size() != 0){
-            
           rowsCleared = rowsCleared + rowsToClear.size();
           score = score + 100*rowsToClear.size();
           levelUp();
           //for debugging
           System.out.println("Rows cleared: " + rowsCleared + " Score: " + score + " Level: " + level + " Speed: " + delay);
-          /* Changes due to some errors during gameplay
-            We clear a line and then drop it as much as possible, then if needed clear a line again and so on...
-            Removed code that after clearing a line moves everything one down and then searches for shapes
+          /* This part clears a row that rowsToClear returns and then will move everything above it one row down
+            until there are no more rows in rowsToClear
           */
             for(int i = 0; i < rowsToClear.size(); i++){
-                for(int x = 0; x < gridMatrix[0].length; x++){
-                    gridMatrix[rowsToClear.get(i)][x] = null;
-                }
+                //move everything one down
+                for(int x = rowsToClear.get(i) - 1; x > -1; x--){
+                            for(int t = 0; t < gridMatrix[0].length; t++){
+                                gridMatrix[x + 1][t] = gridMatrix[x][t];
+                                if(x == 0){
+                                    gridMatrix[x + 1][t] = gridMatrix[x][t];
+                                    gridMatrix[x][t] = null;
+                                }
+                            }
+                        }
+            }
             //use the floodFill algorithm and create a subGrid above the line we last cleared, which is used to find coordinates of connectedShapes
             Color[][] subGrid = FloodFill.getSubGrid(gridMatrix);
             //we get the coordinates from getConnectedShapes
@@ -317,13 +373,11 @@ public class BackendGrid{
                         }
                     }
                 }
-            }
             rowsToClear = rowsToClear();
         }
     }
     
-    public void testPrint( Pentomino fallingBlock) {
-    
+    public void testPrint() {
     	int[][] testPentominoCoords = fallingBlock.getCoordinates();
     	System.out.println("The coordinates of the falling Pentomino:");
     	for(int i = 0; i < testPentominoCoords.length; i++) {
