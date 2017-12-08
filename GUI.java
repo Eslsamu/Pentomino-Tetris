@@ -1,3 +1,5 @@
+package petris;
+
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -68,10 +70,16 @@ public class GUI{
         score.setPadding(new Insets(0, 0, 0, 0));
         score.setStyle("-fx-border-color: white; -fx-background-color: #9ac6d6; -fx-fill: #DAA520; fx-font-weight: bold; -fx-font-size: 11pt");
         
-        Text Highscore = new Text("High score:");
-        Text highscore = new Text("To be implemented");
+        Score scoreReader = new Score();
+        int topScore = scoreReader.getScores()[0];
+        int currentScore = backendGrid.getScore();
+        if(topScore < currentScore){
+            topScore = currentScore;
+        }
+        Text Highscore = new Text("Highest score:");
+        Text highscore = new Text(topScore + "");
         Text Currentscore = new Text("Current score");
-        Text currentscore = new Text(backendGrid.getScore() + "");
+        Text currentscore = new Text(currentScore + "");
         Text RowsCleared = new Text("Rows cleared:");
         Text rowscleared = new Text(backendGrid.getRowsCleared() + "");
         Text Level = new Text("Level:");
@@ -153,7 +161,7 @@ public class GUI{
             }
         }
         
-        if(backendGrid.getIsRunning()){
+        if(!backendGrid.gameOverCheck()){
             int[][] fallingBlockCoords =  backendGrid.getFallingBlock().getCoordinates();
             Color color = backendGrid.getFallingBlock().getColorIndex();
 

@@ -1,6 +1,15 @@
+package petris;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class GameCycle{
@@ -12,29 +21,36 @@ public class GameCycle{
     BackendGrid backendGrid;
     GUI gui;
     
-    public GameCycle(){
-        backendGrid = new BackendGrid(true);
+    public GameCycle(BackendGrid backendGrid){
+        //use the instance of BackendGrid from Main
+        this.backendGrid = backendGrid;
         //create an instance of GUI
         gui = new GUI(backendGrid);
         
-        backendGrid.startGame();
+        //start the game by spawning a pentomino
+        //backendGrid.spawn();
     }
     
-
-    
-    public void updateGUI(){
+    public void updateGUI() throws FileNotFoundException, IOException{
         //this method updates the GUI whenever it is called
         //if gameOverCheck() returns false the two timelines will stop therefore the whole game stops
-        if(!backendGrid.getIsRunning()){
+        gui.drawScore();
+        gui.drawGrid();
+        if(backendGrid.gameOverCheck()){
+            //if game is lost stop Timeline and updated board for one last time
             update.stop();
             gameCycle.stop();
+            gui.drawScore();
+            gui.drawGrid();
+            Score score = new Score();
+            score.updateFile(backendGrid.getScore());
+            //create an instance of main and draw the exit menu
+            Menu menu = new Menu();
+            menu.drawExitMenu(backendGrid);
         }
         else{
             gui.drawNextBlock();
         }
-        //even if game has stopped we will still update the game one last time
-        gui.drawScore();
-        gui.drawGrid();
     }
     public Scene getScene(){
         //this method gets the Scene from the GUI and calls the cycle method which creates and starts the two timelines
@@ -48,7 +64,15 @@ public class GameCycle{
             2 - GameCycle (calls move down)*/
         update = new Timeline(new KeyFrame(
             Duration.millis(60),
-            ae -> updateGUI()));
+            ae -> {
+            try {
+                updateGUI();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(GameCycle.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(GameCycle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }));
             update.setCycleCount(Timeline.INDEFINITE);
             update.play();
        
@@ -72,10 +96,11 @@ public class GameCycle{
         //start it
         gameCycle.play();
     }
-    public Timeline getUpdate(){
+    public static Timeline getUpdate(){
         return update;
     }
-    public Timeline getGameCycle(){
+    public static Timeline getGameCycle(){
         return gameCycle;
     }
 }
+

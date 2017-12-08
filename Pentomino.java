@@ -1,9 +1,13 @@
+package petris;
+
+import javafx.scene.paint.Color;
+
 public class Pentomino{
 	
 	private int[][] coords;
-	private int colorIndex;
+	private Color colorIndex;
 
-		public Pentomino(int[][] newCoords, int newColorIndex){
+		public Pentomino(int[][] newCoords, Color newColorIndex){
 		coords = newCoords;
 		colorIndex = newColorIndex;
 	}
@@ -16,7 +20,7 @@ public class Pentomino{
             coords = newCoordinates;
         } 
         
-	public int getColorIndex(){
+	public Color getColorIndex(){
 		return colorIndex;
 	}
 }
