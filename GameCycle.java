@@ -1,6 +1,13 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class GameCycle{
@@ -9,51 +16,66 @@ public class GameCycle{
     private static Timeline update;
     private static Timeline gameCycle;
     
-    BackendGrid backendGrid;
-    GUI gui;
+    PetrisGame game;
+    MainView gui;
     
-    public GameCycle(){
-        backendGrid = new BackendGrid(true);
+    public GameCycle(PetrisGame game){
+        //use the instance of PetrisGame from Main
+        this.game = game;
         //create an instance of GUI
-        gui = new GUI(backendGrid);
+        gui = new MainView(game);
         
-        backendGrid.startGame();
+        //start the game by spawning a pentomino
+        //game.spawn();
     }
     
-
-    
-    public void updateGUI(){
+    public void updateGUI() throws FileNotFoundException, IOException{
         //this method updates the GUI whenever it is called
         //if gameOverCheck() returns false the two timelines will stop therefore the whole game stops
-        if(!backendGrid.getIsRunning()){
+        gui.updateMain();
+        if(game.gameOverCheck()){
+            //if game is lost stop Timeline and updated board for one last time
             update.stop();
             gameCycle.stop();
+            gui.updateMain();
         }
         else{
             gui.drawNextBlock();
         }
-        //even if game has stopped we will still update the game one last time
-        gui.drawScore();
-        gui.drawGrid();
     }
+    
+    public void pause() {
+    		update.pause();
+    		gameCycle.pause();
+    }
+    
     public Scene getScene(){
         //this method gets the Scene from the GUI and calls the cycle method which creates and starts the two timelines
-        Cycle();
+        run();
         //returns the scene to be used in Main class
         return gui.getScene();
     }
-    public void Cycle(){
+    
+    public void run(){
         /* We create two timelines
             1 - updating the GUI
             2 - GameCycle (calls move down)*/
         update = new Timeline(new KeyFrame(
             Duration.millis(60),
-            ae -> updateGUI()));
+            ae -> {
+            try {
+                updateGUI();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(GameCycle.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(GameCycle.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }));
             update.setCycleCount(Timeline.INDEFINITE);
             update.play();
        
         gameCycle = new Timeline(new KeyFrame(
-            Duration.millis(backendGrid.getSpeed()),
+            Duration.millis(game.getSpeed()),
             ae -> playGame()));
             gameCycle.setCycleCount(Timeline.INDEFINITE);
             gameCycle.play();
@@ -65,17 +87,17 @@ public class GameCycle{
         //first stop the timeline
         gameCycle.stop();
         //create a new one
-        backendGrid.move(Direction.DOWN);
+        game.move(Direction.DOWN);
         gameCycle = new Timeline(new KeyFrame(
-            Duration.millis(backendGrid.getSpeed()),
+            Duration.millis(game.getSpeed()),
             ae -> playGame()));
         //start it
         gameCycle.play();
     }
-    public Timeline getUpdate(){
+    public static Timeline getUpdate(){
         return update;
     }
-    public Timeline getGameCycle(){
+    public static Timeline getGameCycle(){
         return gameCycle;
     }
 }

@@ -1,11 +1,13 @@
+import javafx.scene.paint.Color;
+
 public class Pentomino{
 	
 	private int[][] coords;
-	private int colorIndex;
+	private Color color;
 
-		public Pentomino(int[][] newCoords, int newColorIndex){
+		public Pentomino(int[][] newCoords, Color newColor){
 		coords = newCoords;
-		colorIndex = newColorIndex;
+		color = newColor;
 	}
 
 	public int[][] getCoordinates(){
@@ -16,7 +18,7 @@ public class Pentomino{
             coords = newCoordinates;
         } 
         
-	public int getColorIndex(){
-		return colorIndex;
+	public Color getColorIndex(){
+		return color;
 	}
 }

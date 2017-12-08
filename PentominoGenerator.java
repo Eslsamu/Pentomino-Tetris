@@ -7,9 +7,9 @@ public class PentominoGenerator {
    private ArrayList<int[][]> pentominoList; 
 	public PentominoGenerator(){
 		pentominoList = new ArrayList<int[][]>();
-                int [][] L = {{2,2,2,2,3},{0,1,2,3,3}};
+                int [][] L = {{0,1,2,3,3},{2,2,2,2,3}};
                 pentominoList.add(L);
-                int[][] I = {{2,2,2,2,2},{0,1,2,3,4}};
+                int[][] I = {{0,1,2,3,4},{2,2,2,2,2}};
                 pentominoList.add(I);
                 int[][] U = {{2,3,2,2,3},{0,0,1,2,2}};
                 pentominoList.add(U);
