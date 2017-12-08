@@ -1,4 +1,4 @@
-package petris;
+package endversion;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -10,13 +10,9 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -26,7 +22,7 @@ import javafx.stage.Stage;
 
 public class Menu {
     private Main main;
-    
+    private static String playerName;
     public Menu(){
         main = new Main();
     }
@@ -55,14 +51,10 @@ public class Menu {
              @Override public void handle(ActionEvent e) {
                 //use the Stage from main class
                 Stage primaryStage = main.getStage();
-                //create an instance of BackendGrid and use it in GameCycle
-                BackendGrid backendGrid = new BackendGrid();
-                backendGrid.spawn();
-                GameCycle gameCycle = new GameCycle(backendGrid);
                 //change Scene to scene from GameCycle
-                primaryStage.setScene(gameCycle.getScene());
-                primaryStage.setWidth(700);
-                primaryStage.setHeight(800);
+                primaryStage.setScene(drawInputName());
+                primaryStage.setWidth(200);
+                primaryStage.setHeight(200);
                 //this following code places the Window in the centre
                 Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
                 primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
@@ -116,7 +108,56 @@ public class Menu {
         return startMenu;
     }
     
-    
+    public Scene drawInputName(){
+        GridPane pane = new GridPane();
+           
+        Label enter = new Label("Enter name:");
+        enter.setFont(new Font("Arial", 18));
+        TextField name = new TextField();
+        name.setPrefColumnCount(10);
+        Button submit = new Button("Start game");
+        submit.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
+        
+        
+        pane.setVgap(10);
+        pane.add(enter, 0, 0);
+        pane.add(name, 0, 1);
+        pane.add(submit, 0, 2);
+        pane.setAlignment(Pos.CENTER);
+        pane.setHalignment(enter, HPos.CENTER);
+        pane.setHalignment(submit, HPos.CENTER);
+        
+        submit.setOnAction(new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent e) {
+                playerName = (String)name.getText();
+                if(playerName.length() != 0){
+                    //use the Stage from main class
+                    Stage primaryStage = main.getStage();
+                    //create an instance of BackendGrid and use it in GameCycle
+                    PetrisGame game = new PetrisGame();
+                    game.spawn();
+                    game.runGame();
+                    //change Scene to scene from GameCycle
+                    primaryStage.setScene(game.getScene());
+                    primaryStage.setWidth(700);
+                    primaryStage.setHeight(800);
+                    //this following code places the Window in the centre
+                    Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+                }    
+          }
+        });
+        
+        pane.setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, Insets.EMPTY)));
+        
+        Scene scene = new Scene(pane);
+        return scene;        
+    }
+    public String getPlayer(){
+        return playerName;
+    }
     public Scene drawHighscoreList() {
         Score score = new Score();
         GridPane highscoreList = new GridPane();
@@ -124,7 +165,6 @@ public class Menu {
         int[] scores = score.getScores();
         
         if(names[0] == null){
-            System.out.println("Check");
             Label scoreLabel = new Label("No data available!");
             scoreLabel.setFont(new Font("Arial", 25));
             scoreLabel.setTextFill(Color.DARKRED);
@@ -138,7 +178,7 @@ public class Menu {
                     Label scoreLabel = new Label((i + 1) + ": " + names[i] + " has score: " + scores[i]);
                     scoreLabel.setFont(new Font("Arial", 16));
                     highscoreList.add(scoreLabel, 0, i);
-                    highscoreList.setHalignment(scoreLabel, HPos.CENTER);
+                    highscoreList.setHalignment(scoreLabel, HPos.LEFT);
                     highscoreList.setVgap(10);
                 }
             }   
@@ -174,7 +214,9 @@ public class Menu {
         return list;
     }
     
-    public void drawExitMenu(BackendGrid backendGrid) {
+    public void drawExitMenu(PetrisGame game) {
+        Score score = new Score();
+        score.updateFile(game.getScore(), playerName);
         Stage temporaryStage = new Stage();
         
         Label gameLost = new Label("Sorry, but you lost!");
@@ -202,18 +244,7 @@ public class Menu {
         start.setOnAction(new EventHandler<ActionEvent>(){
              @Override 
                 public void handle(ActionEvent e) {
-                    backendGrid.restart();
-                    GameCycle gameCycle = new GameCycle(backendGrid);
-                    
-                    Stage primaryStage = main.getStage();
-                    
-                    primaryStage.setScene(gameCycle.getScene());
-                    primaryStage.setWidth(700);
-                    primaryStage.setHeight(800);
-                    
-                    Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+                    game.restart();
                     
                     temporaryStage.close();
              }
@@ -288,17 +319,16 @@ public class Menu {
         
         optimalOrdering.setOnAction(new EventHandler<ActionEvent>(){
              @Override public void handle(ActionEvent e) {
-                //use the Stage from main class
+                playerName = "OptimalOrderingTest";
                 Stage primaryStage = main.getStage();
                 //create an instance of BackendGrid and use it in GameCycle
-                BackendGrid backendGrid = new BackendGrid("OptimalOrder");
-                backendGrid.spawn();
-                GameCycle gameCycle = new GameCycle(backendGrid);
+                PetrisGame game = new PetrisGame("OptimalOrder");
+                game.runGame();
                 //change Scene to scene from GameCycle
-                primaryStage.setScene(gameCycle.getScene());
+                primaryStage.setScene(game.getScene());
                 primaryStage.setWidth(700);
                 primaryStage.setHeight(800);
-                //this following code places the Window in the centre
+                //this following code places the Window in the centr
                 Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
                 primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
                 primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
@@ -307,17 +337,16 @@ public class Menu {
         
         clearRow.setOnAction(new EventHandler<ActionEvent>(){
              @Override public void handle(ActionEvent e) {
-                //use the Stage from main class
+                 playerName = "ClearRowTest";
                 Stage primaryStage = main.getStage();
                 //create an instance of BackendGrid and use it in GameCycle
-                BackendGrid backendGrid = new BackendGrid("ClearRow");
-                backendGrid.spawn();
-                GameCycle gameCycle = new GameCycle(backendGrid);
+                PetrisGame game = new PetrisGame("ClearRow");
+                game.runGame();
                 //change Scene to scene from GameCycle
-                primaryStage.setScene(gameCycle.getScene());
+                primaryStage.setScene(game.getScene());
                 primaryStage.setWidth(700);
                 primaryStage.setHeight(800);
-                //this following code places the Window in the centre
+                //this following code places the Window in the centr
                 Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
                 primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
                 primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);

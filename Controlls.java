@@ -1,49 +1,47 @@
-package petris;
+package endversion;
 
 import javafx.animation.Animation;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class Controlls{
-    BackendGrid backendGrid;
-    public Controlls(BackendGrid backendGrid){
-        this.backendGrid = backendGrid;
+public class Controlls implements EventHandler<KeyEvent>{
+    PetrisGame game;
+    
+    public Controlls(PetrisGame game){
+        this.game = game;
     }
-    public EventHandler setControls(){
-        GameCycle gameCycle = new GameCycle(backendGrid);
-    EventHandler<KeyEvent> eventHandler = (KeyEvent event) -> {
+    
+    @Override
+    public void handle(KeyEvent event){
         if(event.getCode() == KeyCode.RIGHT) {
-            backendGrid.move(Direction.RIGHT);
+            game.move(Direction.RIGHT);
         }
         if(event.getCode() == KeyCode.LEFT) {
-            backendGrid.move(Direction.LEFT);
+            game.move(Direction.LEFT);
         }
         if(event.getCode() == KeyCode.UP) {
-            backendGrid.move(Direction.CLOCKWISE);
+            game.move(Direction.CLOCKWISE);
         }
         if(event.getCode() == KeyCode.DOWN) {
-            backendGrid.move(Direction.COUNTERCLOCKWISE);
+            game.move(Direction.COUNTERCLOCKWISE);
         }
         if(event.getCode() == KeyCode.SPACE){
-            while(!backendGrid.doesCollide(Direction.DOWN)){
-                backendGrid.move(Direction.DOWN);
+            while(!game.doesCollide(Direction.DOWN)){
+               game.move(Direction.DOWN);
             }
         }
         if(event.getCode() == KeyCode.P){
-            if(gameCycle.getGameCycle().getStatus().compareTo(Animation.Status.PAUSED) == 0){
-                gameCycle.getGameCycle().play();
-                gameCycle.getUpdate().play();
-            }
-            else{
-                gameCycle.getGameCycle().pause();
-                gameCycle.getUpdate().pause();
-            }
+           if(game.getIsRunning()) {
+        	game.pause();
+           }
+           else{
+        	game.runGame();
+           }
         }
         if(event.getCode() == KeyCode.R){
-            backendGrid.restart();
+            game.restart();
         }
-    };
-        return eventHandler;
     }
 }

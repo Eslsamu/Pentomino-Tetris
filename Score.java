@@ -1,4 +1,4 @@
-package petris;
+package endversion;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,9 +30,9 @@ public class Score{
         }
         return names;
     }
-    public void updateFile(int score){
+    public void updateFile(int score, String playerName){
         //update file, we still need a window that will get players name, Stijn is working on it
-        updateFile(score, "RandomName" , getScores(), getNames());
+        updateFile(score, playerName , getScores(), getNames());
     }
     public String[] readData(){
         String[] data = new String[numberOfScores*3];
