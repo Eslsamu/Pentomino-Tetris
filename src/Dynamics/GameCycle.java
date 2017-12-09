@@ -6,16 +6,10 @@ import java.util.logging.Logger;
 
 import GameLogic.Direction;
 import GameLogic.PetrisGame;
-import Menu.MenuView;
-import Setup.ScoreReader;
-import GameView.GameOverView;
 import GameView.MainView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
@@ -53,9 +47,10 @@ public class GameCycle{
     }
     
     public void pause() {
-    		game.setIsRunning(false);
     		update.pause();
     		gameCycle.pause();
+                game.setIsRunning(false);
+    		
     }
     
     public Scene getScene(){

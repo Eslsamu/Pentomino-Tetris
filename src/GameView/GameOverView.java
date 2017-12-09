@@ -3,7 +3,6 @@ package GameView;
 import GameLogic.PetrisGame;
 import Menu.MenuView;
 import Setup.Main;
-import Setup.ScoreReader;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -58,7 +57,8 @@ public class GameOverView extends GridPane{
 	    start.setOnAction(new EventHandler<ActionEvent>(){
 	         @Override 
 	            public void handle(ActionEvent e) {
-	                game.restart();	                
+	                game.restart();
+                        game.runGame();
 	                temporaryStage.close();
 	         }
 	    });

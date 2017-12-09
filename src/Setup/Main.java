@@ -1,4 +1,5 @@
 package Setup;
+
 import Menu.MenuView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +22,7 @@ public class Main extends Application {
                 Scene scene = new Scene(menu);
                 
                 primaryStage.setTitle("Petris");
-				primaryStage.setScene(scene);
+		primaryStage.setScene(scene);
                 primaryStage.setWidth(400);
                 primaryStage.setHeight(400);
                 primaryStage.setResizable(false);
