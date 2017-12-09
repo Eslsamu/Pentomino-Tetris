@@ -6,7 +6,6 @@ import Agent.Agent;
 import Dynamics.Controlls;
 import Dynamics.GameCycle;
 import GameView.MainView;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -36,10 +35,10 @@ public class PetrisGame extends FloodFill{
     private Pentomino fallingBlock;
     private Pentomino nextBlock;
     private Agent agent;
-	private String playerName;
+    private String playerName;
     
-	private int[] optimalOrder;
-	private int optimalOrderCounter = 0;
+    private int[] optimalOrder;
+    private int optimalOrderCounter = 0;
 	
     public PetrisGame() {
     	gridMatrix = new Color[HEIGHT][WIDTH];
@@ -152,8 +151,8 @@ public class PetrisGame extends FloodFill{
     
     
     public void pause() {
-    	isRunning=false;
     	cycle.pause();
+        isRunning = false;
     }
     
     public void runGame() {
@@ -191,7 +190,6 @@ public class PetrisGame extends FloodFill{
     
     public void updateView() {
     	view.updateMain();
-    	System.out.println("updated view in model...");
     }
     
     public void restart() {
@@ -201,8 +199,6 @@ public class PetrisGame extends FloodFill{
     	delay = 500.0;
     	gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
-    	cycle = new GameCycle(this);
-    	view = new MainView(this);
     	if(optimalOrder == null){
     		nextBlock = startGenerator.getRandomPentomino();
     	}
@@ -211,7 +207,9 @@ public class PetrisGame extends FloodFill{
     		nextBlock = startGenerator.getTestPentomino(optimalOrder[optimalOrderCounter]);
     		optimalOrderCounter++;
     	}
-    	spawn();
+        isRunning = true;
+        spawn();
+        //runGame();
     }
     
     public void move(Direction aDirection){
@@ -371,7 +369,7 @@ public class PetrisGame extends FloodFill{
     }
     
     public void levelUp() {
-    	if(score/level >= 500){
+    	if(score/level >= 1000){
             level++;
             delay = delay*speedIncrease;
         }
@@ -399,10 +397,10 @@ public class PetrisGame extends FloodFill{
         //if there are no rows to clear, then nothing happens (because rowToClear.size = 0)
         while(rowsToClear.size() != 0){
           rowsCleared = rowsCleared + rowsToClear.size();
-          score = score + 100*rowsToClear.size();
+          for(int i = 1; i < rowsToClear.size() + 1; i++){
+              score += 100*i;
+          }
           levelUp();
-          //for debugging
-          System.out.println("Rows cleared: " + rowsCleared + " Score: " + score + " Level: " + level + " Speed: " + delay);
           /* This part clears a row that rowsToClear returns and then will move everything above it one row down
             until there are no more rows in rowsToClear
           */
