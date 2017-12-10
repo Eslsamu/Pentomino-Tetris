@@ -31,7 +31,7 @@ public class HighscoreView extends GridPane{
         names = sr.getNames();
         scores = sr.getScores();
         
-        if(names[0] == null){
+        if(names[0]==null){
             Label scoreLabel = new Label("No data available!");
             scoreLabel.setFont(new Font("Arial", 25));
             scoreLabel.setTextFill(Color.DARKRED);

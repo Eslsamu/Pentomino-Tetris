@@ -50,7 +50,7 @@ public class PlayerNameView extends GridPane{
                     //use the Stage from main class
                     Stage primaryStage = Main.getStage();
                     //create an instance of BackendGrid and use it in GameCycle
-                    PetrisGame game = new PetrisGame();
+                    PetrisGame game = new PetrisGame(playerName);
                     game.spawn();
                     game.runGame();
                     //change Scene to scene from GameCycle

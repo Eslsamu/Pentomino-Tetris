@@ -58,9 +58,12 @@ public class ScoreReader {
     //not sure if we need it, but it checks if the same name has the same score
     public boolean checkIfExisting(int inputScore, String inputName, int[] outputScores, String[] outputNames){
         for(int i = 0; i < outputScores.length; i++){
-            if(inputScore == outputScores[i] && inputName.equals(outputNames[i])){
-                return true;
+            if(outputNames[i]==null){
+                if(inputScore == outputScores[i] && inputName.equals(outputNames[i])){
+                    return true;
+                }
             }
+
         }
         return false;
     }
