@@ -58,7 +58,7 @@ public class GameOverView extends GridPane{
 	         @Override 
 	            public void handle(ActionEvent e) {
 	                game.restart();
-                        game.runGame();
+                    game.runGame();
 	                temporaryStage.close();
 	         }
 	    });

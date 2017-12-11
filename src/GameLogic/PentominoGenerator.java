@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class PentominoGenerator {
    private ArrayList<int[][]> pentominoList; 
 	public PentominoGenerator(){
+		//X/Y coordinates of the pieces of the 12 pentomino shapes
 		pentominoList = new ArrayList<int[][]>();
                 int [][] L = {{0,1,2,3,3},{2,2,2,2,3}};
                 pentominoList.add(L);
@@ -33,7 +34,7 @@ public class PentominoGenerator {
                 int[][] Y = {{2,1,2,2,2},{0,1,1,2,3}};
                 pentominoList.add(Y);
 	}
-
+	
 	public Pentomino getRandomPentomino(){
 		int index = (int) (Math.random()*12);
 		Color ranColor = Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*254)); //254 to leave space for an exception store

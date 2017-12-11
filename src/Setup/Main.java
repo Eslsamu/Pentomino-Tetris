@@ -22,7 +22,7 @@ public class Main extends Application {
                 Scene scene = new Scene(menu);
                 
                 primaryStage.setTitle("Petris");
-		primaryStage.setScene(scene);
+                primaryStage.setScene(scene);
                 primaryStage.setWidth(400);
                 primaryStage.setHeight(400);
                 primaryStage.setResizable(false);

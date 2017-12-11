@@ -11,34 +11,34 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
 
-public class PetrisGame extends FloodFill{
-    private final int HEIGHT = 15;
-    private final int WIDTH = 5;
-    
+public class PetrisGame{
+	//comments
+	private String playerName;
+	//comments
+    protected final int HEIGHT = 15;
+    protected final int WIDTH = 5;
+  //comments
     private int level = 1;
     private int score = 0;
     private int rowsCleared = 0;
     private double delay = 500;
     private double speedIncrease = 0.8;
+  //comments
+    protected boolean isRunning = false; //+ get&setters
     
-    private boolean isRunning = false; //+ get&setters
     private boolean hasBot = false;
     
-    private MainView view;
+    //initializes the GameGUI, ...
+    protected MainView view;
+    protected GameCycle cycle;    
+    protected Controlls controlls;
     
-    //private TimeCycle cycle;//TODO debug
-    private GameCycle cycle;
-    
-    private Controlls controlls;
-    
-    private Color[][] gridMatrix;
-    private Pentomino fallingBlock;
-    private Pentomino nextBlock;
     private Agent agent;
-    private String playerName;
     
-    private int[] optimalOrder;
-    private int optimalOrderCounter = 0;
+    //comments
+    protected Color[][] gridMatrix;
+    protected Pentomino fallingBlock;
+    protected Pentomino nextBlock;
 	
     public PetrisGame() {
     	gridMatrix = new Color[HEIGHT][WIDTH];
@@ -49,13 +49,10 @@ public class PetrisGame extends FloodFill{
     	cycle = new GameCycle(this);
         controlls = new Controlls(this);
         
-        isRunning = true;
-        this.hasBot = false;
-        spawn();
-        
+        isRunning = true;      
     }
     
-    public PetrisGame(boolean bot) {
+    public PetrisGame(GameMode mode) {
     	gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
@@ -63,17 +60,8 @@ public class PetrisGame extends FloodFill{
         view = new MainView(this);
         cycle = new GameCycle(this);
         controlls = new Controlls(this);
-        
-        this.hasBot = bot;
-        
-        
-        if(bot) {
-        	agent = new Agent(this);
-        	delay = 1000;
-        }
-        
+
         isRunning = true;
-        spawn();
     }
     
     public PetrisGame(String name){
@@ -89,76 +77,9 @@ public class PetrisGame extends FloodFill{
         
         this.hasBot = false;
         isRunning = true;
-        spawn();
-    }
-    
-    public String getPlayerName() {
-		return playerName;
-	}
-    
-    public Controlls getControlls() {
-    	return controlls;
-    }
-    
-    public MainView getView() {
-    	return view;
-    }
-    
-    public Scene getScene() {
-    	Scene scene = new Scene(view);
-    	scene.addEventFilter(KeyEvent.KEY_PRESSED, controlls);
-    	return scene;
-    }
-    
-    public GameCycle getCycle() {
-    	return cycle;
-    }
-    
-    public boolean getIsRunning() {
-    	return isRunning;
-    }
-    
-    public void setIsRunning(boolean r) {
-    	isRunning = r;
-    }
-    
-    public Pentomino getFallingBlock() {
-    	return fallingBlock;
-    }
-    
-    public Pentomino getNextBlock() {
-    	return nextBlock;
-    }
-    
-    public Color[][] getGrid(){
-    	return gridMatrix;
-    }
-    
-    public int getLevel() {
-    	return level;
-    }
-    
-    public int getScore() {
-    	return score;
-    }
-    
-    public int getRowsCleared() {
-    	return rowsCleared;
-    }
-    public double getSpeed(){
-        return delay;
     }
     
     
-    public void pause() {
-    	cycle.pause();
-        isRunning = false;
-    }
-    
-    public void runGame() {
-    	isRunning = true;
-    	cycle.run();
-    }
     
     public boolean gameOverCheck() {
         //gives errors, to be fixed
@@ -167,7 +88,7 @@ public class PetrisGame extends FloodFill{
            if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {
     		//fallingBlock = null; //currently not needed
     		System.out.println("GameOver"); //will be printed twice due to double use of gameOverCheck(), which is needed
-    		hasBot = false; //stop the bot from making a new move
+    		//hasBot = false; //stop the bot from making a new move
     		isRunning = false;
     		System.out.println("check1");
             return true;
@@ -183,9 +104,9 @@ public class PetrisGame extends FloodFill{
     	fallingBlock = nextBlock;
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();    
-        if(hasBot) {
-        	agent.makeMove();
-        }
+        //if(hasBot) {
+        //	agent.makeMove();
+        //}       
     }
     
     public void updateView() {
@@ -199,17 +120,9 @@ public class PetrisGame extends FloodFill{
     	delay = 500.0;
     	gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
-    	if(optimalOrder == null){
-    		nextBlock = startGenerator.getRandomPentomino();
-    	}
-    	else {
-    		optimalOrderCounter = 0;
-    		nextBlock = startGenerator.getTestPentomino(optimalOrder[optimalOrderCounter]);
-    		optimalOrderCounter++;
-    	}
+    	nextBlock = startGenerator.getRandomPentomino();
         isRunning = true;
         spawn();
-        //runGame();
     }
     
     public void move(Direction aDirection){
@@ -246,7 +159,7 @@ public class PetrisGame extends FloodFill{
             fallingBlock.setCoordinates(changeCoords);
         }
     }    
-    
+    //TODO Different with bot
     public int[][] rotate(int[][] coords, double degrees, boolean smallBoardRotation){//smallBoardRotation is a feature to rotate the block even if it would hit a wall in that position
             int rotationPoint = coords[0].length / 2;
             int reducedAmountX = coords[0][rotationPoint];
@@ -298,6 +211,7 @@ public class PetrisGame extends FloodFill{
             }
             return coords;
     }
+    
     public boolean doesCollide(int x, int y){
         if(y + 1 >= gridMatrix.length || gridMatrix[y + 1][x] != null){
             return true;
@@ -519,5 +433,71 @@ public class PetrisGame extends FloodFill{
 		return matrix;
 	}
 
-	
+    public String getPlayerName() {
+		return playerName;
+	}
+    
+    public Controlls getControlls() {
+    	return controlls;
+    }
+    
+    public MainView getView() {
+    	return view;
+    }
+    
+    public Scene getScene() {
+    	Scene scene = new Scene(view);
+    	scene.addEventFilter(KeyEvent.KEY_PRESSED, controlls);
+    	return scene;
+    }
+    
+    public GameCycle getCycle() {
+    	return cycle;
+    }
+    
+    public boolean getIsRunning() {
+    	return isRunning;
+    }
+    
+    public void setIsRunning(boolean r) {
+    	isRunning = r;
+    }
+    
+    public Pentomino getFallingBlock() {
+    	return fallingBlock;
+    }
+    
+    public Pentomino getNextBlock() {
+    	return nextBlock;
+    }
+    
+    public Color[][] getGrid(){
+    	return gridMatrix;
+    }
+    
+    public int getLevel() {
+    	return level;
+    }
+    
+    public int getScore() {
+    	return score;
+    }
+    
+    public int getRowsCleared() {
+    	return rowsCleared;
+    }
+    public double getSpeed(){
+        return delay;
+    }
+    
+    
+    public void pause() {
+    	cycle.pause();
+        isRunning = false;
+    }
+    
+    public void runGame() {
+    	isRunning = true;
+    	cycle.run();
+    }
 }

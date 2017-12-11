@@ -32,9 +32,7 @@ public class GameCycle{
         //if gameOverCheck() returns false the two timelines will stop therefore the whole game stops
     	
     	gui = game.getView();
-    	if(gui==null) {
-    		System.out.println("kek");
-    	}
+    	
         gui.updateMain();
         if(game.gameOverCheck()){
             //if game is lost stop Timeline and updated board for one last time
@@ -49,18 +47,12 @@ public class GameCycle{
     public void pause() {
     		update.pause();
     		gameCycle.pause();
-                game.setIsRunning(false);
-    		
+            game.setIsRunning(false);   		
     }
     
-    public Scene getScene(){
-        //this method gets the Scene from the GUI and calls the cycle method which creates and starts the two timelines
-        run();//TODO 
-        //returns the scene to be used in Main class
-        return gui.getScene();
-    }
     
     public void run(){
+    	  	
         /* We create two timelines
             1 - updating the GUI
             2 - GameCycle (calls move down)*/

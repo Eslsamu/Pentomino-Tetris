@@ -3,6 +3,8 @@ package Menu;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.Scene;
+import GameLogic.DemoOOGame;
+import GameLogic.GameMode;
 import GameLogic.PetrisGame;
 import Setup.Main;
 import javafx.event.ActionEvent;
@@ -56,7 +58,8 @@ public class DemoMenuView extends GridPane{
                 //playerName = "OptimalOrderingTest";
                 Stage primaryStage = main.getStage();
                 //create an instance of BackendGrid and use it in GameCycle
-                PetrisGame game = new PetrisGame("OptimalOrder");
+                DemoOOGame game = new DemoOOGame();
+                game.spawn();//TODO shouldnt be like this 
                 game.runGame();
                 //change Scene to scene from GameCycle
                 primaryStage.setScene(game.getScene());
@@ -74,7 +77,8 @@ public class DemoMenuView extends GridPane{
              @Override public void handle(ActionEvent e) {
                 Stage primaryStage = main.getStage();
                 //create an instance of BackendGrid and use it in GameCycle
-                PetrisGame game = new PetrisGame("ClearRow");
+                PetrisGame game = new PetrisGame(GameMode.ROWCLEAR);
+                game.spawn();//TODO shouldnt be like this 
                 game.runGame();
                 //change Scene to scene from GameCycle
                 primaryStage.setScene(game.getScene());

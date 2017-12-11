@@ -1,20 +1,19 @@
 package GameLogic;
 
+
 public class DemoOOGame extends PetrisGame{
 	
 	//comments
-    private int[] fallOrder; //TODO needs to be defined 
-    private int fallCounter;
+    protected int[] fallOrder = {6, 3, 8, 7, 10, 9, 5, 11, 1, 4, 2, 0}; 
+    protected int fallCounter = 0;
 	
 	public DemoOOGame() {
 		super();
-		fallOrder = new int[]{6, 3, 8, 7, 10, 9, 5, 11, 1, 4, 2, 0};
-		fallCounter = 0;
 	}
 	
 	@Override 
 	public void spawn() {
-		if(fallCounter < fallOrder.length){
+		if(this.fallCounter < this.fallOrder.length){
 			fallCounter++;
 		}
 		else {

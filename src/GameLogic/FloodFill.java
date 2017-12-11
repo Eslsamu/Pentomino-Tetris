@@ -3,6 +3,7 @@ package GameLogic;
 import java.util.ArrayList;
 import javafx.scene.paint.Color;
 
+//helper class that implements the recursive flood fill algorithmn to clump the falling shapes after a row gets deleted
 public class FloodFill {
     public static Color[][] getSubGrid(Color[][] grid){
         Color[][] subGrid = new Color[grid.length][grid[0].length];
