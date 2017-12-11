@@ -3,7 +3,9 @@ package Menu;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.Scene;
+import GameLogic.BotGame;
 import GameLogic.DemoOOGame;
+import GameLogic.DemoRCGame;
 import GameLogic.GameMode;
 import GameLogic.PetrisGame;
 import Setup.Main;
@@ -53,6 +55,26 @@ public class DemoMenuView extends GridPane{
         setHalignment(startMenu, HPos.CENTER);
         setVgap(10);
         
+        bot.setOnAction(new EventHandler<ActionEvent>(){
+            @Override public void handle(ActionEvent e) {
+               //playerName = "OptimalOrderingTest";
+               Stage primaryStage = main.getStage();
+               //create an instance of BackendGrid and use it in GameCycle
+               BotGame game = new BotGame();
+               game.spawn();//TODO shouldnt be like this 
+               game.runGame();
+               //change Scene to scene from GameCycle
+               primaryStage.setScene(game.getScene());
+               primaryStage.setWidth(700);
+               primaryStage.setHeight(800);
+               
+               //this following code places the Window in the centr
+               Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+               primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+               primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+            }
+       });
+        
         optimalOrdering.setOnAction(new EventHandler<ActionEvent>(){
              @Override public void handle(ActionEvent e) {
                 //playerName = "OptimalOrderingTest";
@@ -77,7 +99,7 @@ public class DemoMenuView extends GridPane{
              @Override public void handle(ActionEvent e) {
                 Stage primaryStage = main.getStage();
                 //create an instance of BackendGrid and use it in GameCycle
-                PetrisGame game = new PetrisGame(GameMode.ROWCLEAR);
+                DemoRCGame game = new DemoRCGame();
                 game.spawn();//TODO shouldnt be like this 
                 game.runGame();
                 //change Scene to scene from GameCycle

@@ -26,14 +26,11 @@ public class PetrisGame{
   //comments
     protected boolean isRunning = false; //+ get&setters
     
-    private boolean hasBot = false;
-    
     //initializes the GameGUI, ...
     protected MainView view;
     protected GameCycle cycle;    
     protected Controlls controlls;
     
-    private Agent agent;
     
     //comments
     protected Color[][] gridMatrix;
@@ -60,7 +57,6 @@ public class PetrisGame{
         view = new MainView(this);
         cycle = new GameCycle(this);
         controlls = new Controlls(this);
-
         isRunning = true;
     }
     
@@ -75,7 +71,6 @@ public class PetrisGame{
         view = new MainView(this);
         controlls = new Controlls(this);
         
-        this.hasBot = false;
         isRunning = true;
     }
     
@@ -88,9 +83,7 @@ public class PetrisGame{
            if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {
     		//fallingBlock = null; //currently not needed
     		System.out.println("GameOver"); //will be printed twice due to double use of gameOverCheck(), which is needed
-    		//hasBot = false; //stop the bot from making a new move
     		isRunning = false;
-    		System.out.println("check1");
             return true;
             }              
     	} 
@@ -103,10 +96,7 @@ public class PetrisGame{
     	}
     	fallingBlock = nextBlock;
     	PentominoGenerator startGenerator = new PentominoGenerator();
-        nextBlock = startGenerator.getRandomPentomino();    
-        //if(hasBot) {
-        //	agent.makeMove();
-        //}       
+        nextBlock = startGenerator.getRandomPentomino();         
     }
     
     public void updateView() {

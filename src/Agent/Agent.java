@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import GameLogic.BotGame;
 import GameLogic.PetrisGame;
 import javafx.scene.paint.Color;
 
 public class Agent extends Thread{
 	
-	private PetrisGame game;
+	private BotGame game;
 	private int moveCount = 0;
 	private double[] genes = {1,0.5,20,0.5};
 	
-	public Agent(PetrisGame backendGrid) {
-		this.game = backendGrid;
+	public Agent(BotGame g) {
+		game = g;
 	}
 	
 	public static void main(String[] args) {
