@@ -2,11 +2,11 @@ package GameLogic;
 
 import Agent.Agent;
 
-public class BotGame extends PetrisGame{
+public class DemoBotGame extends PetrisGame{
 	
     private Agent agent;
     
-    public BotGame() {
+    public DemoBotGame() {
     	super("Roboter");
     	agent = new Agent(this);
     }

@@ -3,7 +3,7 @@ package Menu;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.Scene;
-import GameLogic.BotGame;
+import GameLogic.DemoBotGame;
 import GameLogic.DemoOOGame;
 import GameLogic.DemoRCGame;
 import GameLogic.GameMode;
@@ -60,7 +60,7 @@ public class DemoMenuView extends GridPane{
                //playerName = "OptimalOrderingTest";
                Stage primaryStage = main.getStage();
                //create an instance of BackendGrid and use it in GameCycle
-               BotGame game = new BotGame();
+               DemoBotGame game = new DemoBotGame();
                game.spawn();//TODO shouldnt be like this 
                game.runGame();
                //change Scene to scene from GameCycle

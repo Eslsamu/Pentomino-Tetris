@@ -1,33 +1,26 @@
 package Agent;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
-import GameLogic.BotGame;
-import GameLogic.PetrisGame;
+
+import java.util.ArrayList;
+
+import GameLogic.DemoBotGame;
+
 import javafx.scene.paint.Color;
 
 public class Agent extends Thread{
 	
-	private BotGame game;
-	private int moveCount = 0;
+	private DemoBotGame game;
+	
 	private double[] genes = {1,0.5,20,0.5};
 	
-	public Agent(BotGame g) {
-		game = g;
+	public Agent(DemoBotGame g) {
+		game = g;		
 	}
 	
-	public static void main(String[] args) {
-
-	}
-	
-	//makeMove
+	//comment
 	public void makeMove() {
 		if(!game.gameOverCheck()) {
-			moveCount++;
 			game.getFallingBlock().setCoordinates(bestMove()); //puts the falling block at the best position --> the GameCycle will then just regularly to move it down and place it.	
-			System.out.println("check2");
 		}	
 	}
 	//creates an array of evaluations for each move and returns the move with the highest value
@@ -77,7 +70,6 @@ public class Agent extends Thread{
          value += genes[2]*instantFullRows(gridCopy);
          value -= genes[3]*countHoles(gridCopy);
          //TODO       
-         System.out.println("check1");
 		return value;
 	}
 	
@@ -121,7 +113,6 @@ public class Agent extends Thread{
 	public double cumulativeHeight(Color[][] grid) {
 		double total = 0;
 		for(int col = 0; col < grid[0].length; col++) {
-			int colHeight = grid.length - getPivotRow(col,grid);
 			total += grid.length - getPivotRow(col,grid);
 		}
 		return total/grid[0].length;
