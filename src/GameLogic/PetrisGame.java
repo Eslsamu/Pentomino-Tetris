@@ -1,7 +1,6 @@
 package GameLogic;
 import java.util.ArrayList;
 
-import Agent.Agent;
 
 import Dynamics.Controlls;
 import Dynamics.GameCycle;
@@ -12,18 +11,18 @@ import javafx.scene.paint.Color;
 
 
 public class PetrisGame{
-	//comments
-	private String playerName;
-	//comments
+    //comments
+    protected String playerName;
+    //comments
     protected final int HEIGHT = 15;
     protected final int WIDTH = 5;
-  //comments
-    private int level = 1;
-    private int score = 0;
-    private int rowsCleared = 0;
-    private double delay = 500;
-    private double speedIncrease = 0.8;
-  //comments
+    //comments
+    protected int level = 1;
+    protected int score = 0;
+    protected int rowsCleared = 0;
+    protected double delay = 500;
+    protected double speedIncrease = 0.8;
+    //comments
     protected boolean isRunning = false; //+ get&setters
     
     //initializes the GameGUI, ...
@@ -48,33 +47,18 @@ public class PetrisGame{
         
         isRunning = true;      
     }
-    
-    public PetrisGame(GameMode mode) {
+    public PetrisGame(String name) {
+        playerName = name;
     	gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
         
         view = new MainView(this);
-        cycle = new GameCycle(this);
-        controlls = new Controlls(this);
-        isRunning = true;
-    }
-    
-    public PetrisGame(String name){
-    	playerName = name;
-    	
-        gridMatrix = new Color[HEIGHT][WIDTH];
-        PentominoGenerator startGenerator = new PentominoGenerator();
-        nextBlock = startGenerator.getRandomPentomino(); 
-        
-        cycle = new GameCycle(this);
-        view = new MainView(this);
+    	cycle = new GameCycle(this);
         controlls = new Controlls(this);
         
-        isRunning = true;
+        isRunning = true;      
     }
-    
-    
     
     public boolean gameOverCheck() {
         //gives errors, to be fixed
@@ -116,37 +100,44 @@ public class PetrisGame{
     }
     
     public void move(Direction aDirection){
-        if(!doesCollide(aDirection)&&isRunning) {
-            int[][] changeCoords = fallingBlock.getCoordinates();
-            switch(aDirection) {
-        	case DOWN:  {       		
-                for(int i = 0; i < changeCoords[1].length; i++){
-                    changeCoords[1][i]++;
-                }
-        		break;
-        	}	
-        	case RIGHT: {
-            	for(int i = 0; i < changeCoords[0].length; i++){
-                	changeCoords[0][i]++;
-            	}
-            	break;
-        	}        	
-        	case LEFT: {
-        		for(int i = 0; i < changeCoords[0].length; i++){
-        			changeCoords[0][i]--;
-        		}
-        		break;
-        	}
-        	case CLOCKWISE: {
-        		changeCoords = rotate(changeCoords, 90,true); //board is swapped around, so 90 instead of 270 
-                        break;
-        	}   
-        	case COUNTERCLOCKWISE: {
-        		 changeCoords = rotate(changeCoords, 270,true); 
-                         break; 
-        	}                    
+        if(aDirection == Direction.DROPDOWN){
+            while(!doesCollide(Direction.DOWN)){
+                move(Direction.DOWN);
             }
+        }
+        else{
+            if(!doesCollide(aDirection)&&isRunning) {
+                int[][] changeCoords = fallingBlock.getCoordinates();
+                switch(aDirection) {
+                    case DOWN:  {       		
+                    for(int i = 0; i < changeCoords[1].length; i++){
+                        changeCoords[1][i]++;
+                    }
+                            break;
+                    }	
+                    case RIGHT: {
+                    for(int i = 0; i < changeCoords[0].length; i++){
+                            changeCoords[0][i]++;
+                    }
+                    break;
+                    }        	
+                    case LEFT: {
+                            for(int i = 0; i < changeCoords[0].length; i++){
+                                    changeCoords[0][i]--;
+                            }
+                            break;
+                    }
+                    case CLOCKWISE: {
+                            changeCoords = rotate(changeCoords, 90,true); //board is swapped around, so 90 instead of 270 
+                            break;
+                    }   
+                    case COUNTERCLOCKWISE: {
+                             changeCoords = rotate(changeCoords, 270,true); 
+                             break; 
+                    }
+                }    
             fallingBlock.setCoordinates(changeCoords);
+            }
         }
     }    
     //TODO Different with bot
@@ -221,6 +212,7 @@ public class PetrisGame{
                 if(checkCoords[1][i] + 1 >= gridMatrix.length || gridMatrix[ checkCoords[1][i] + 1 ][ checkCoords[0][i] ]!=null){
                    //here a new block gets created as it fell down to the ground
                    placePento(fallingBlock);
+                   clearRows();
                    return true;
                 }
             }   
@@ -265,7 +257,6 @@ public class PetrisGame{
             for(int i = 0; i < whereToPlace[0].length; i++){
                 gridMatrix[whereToPlace[1][i]][whereToPlace[0][i]] = colorIndex;
             }
-	    clearRows();
             gameOverCheck();
             if(isRunning) {
             	spawn();

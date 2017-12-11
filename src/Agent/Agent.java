@@ -4,19 +4,23 @@ package Agent;
 import java.util.ArrayList;
 
 import GameLogic.DemoBotGame;
+import GameLogic.DemoOOGame;
 
 import javafx.scene.paint.Color;
 
-public class Agent extends Thread{
+public class Agent{
 	
 	private DemoBotGame game;
 	
 	private double[] genes = {1,0.5,20,0.5};
 	
+        public Agent(DemoBotGame g, double[] genes){
+            this.genes = genes;
+            game = g;
+        }
 	public Agent(DemoBotGame g) {
 		game = g;		
 	}
-	
 	//comment
 	public void makeMove() {
 		if(!game.gameOverCheck()) {
