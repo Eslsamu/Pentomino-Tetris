@@ -23,14 +23,13 @@ public class BotCycle extends GameCycle{
     	System.out.println("tick");
 		agent = bgame.getAgent();
 		agent.makeMove(bgame);
-        gameCycle.stop();
+        ticker.stop();
         bgame.move(Direction.DOWN);
         
-        gameCycle = new Timeline(new KeyFrame(
+        ticker = new Timeline(new KeyFrame(
             Duration.millis(game.getSpeed()),
             ae -> playGame()));
-        //start it
         
-        gameCycle.play();
+        ticker.play();
     }
 }

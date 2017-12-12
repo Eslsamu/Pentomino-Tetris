@@ -17,7 +17,7 @@ public class GameCycle{
 	
     //two timelines, one updates the game every 60ms, the other drops pento down starting from 500ms
     protected Timeline update;
-    protected Timeline gameCycle;
+    protected Timeline ticker;
     
     protected PetrisGame game;
     protected MainView gui;
@@ -35,7 +35,7 @@ public class GameCycle{
         if(game.gameOverCheck()){
             //if game is lost stop Timeline and updated board for one last time
             update.stop();
-            gameCycle.stop();
+            ticker.stop();
             
             gui = game.getView();
             gui.showGameOver();      
@@ -45,7 +45,7 @@ public class GameCycle{
     
     public void pause() {
     		update.pause();
-    		gameCycle.pause();
+    		ticker.pause();
             game.setIsRunning(false);   		
     }
     
@@ -69,26 +69,26 @@ public class GameCycle{
             update.setCycleCount(Timeline.INDEFINITE);
             update.play();
        
-        gameCycle = new Timeline(new KeyFrame(
+        ticker = new Timeline(new KeyFrame(
             Duration.millis(game.getSpeed()),
             ae -> playGame()));
-            gameCycle.setCycleCount(Timeline.INDEFINITE);
-            gameCycle.play();
+            ticker.setCycleCount(Timeline.INDEFINITE);
+            ticker.play();
     }
     
     public void playGame(){
         //this method is used in the gameCycle timeline, it basically creates a new timeline each time it is called
         //this is needed so that the speed is updated
         //first stop the timeline
-        gameCycle.stop();
+        ticker.stop();
         //create a new one
         game.move(Direction.DOWN);
         
-        gameCycle = new Timeline(new KeyFrame(
+        ticker = new Timeline(new KeyFrame(
             Duration.millis(game.getSpeed()),
             ae -> playGame()));
         //start it
-        gameCycle.play();
+        ticker.play();
     }
     
     public Timeline getUpdate(){
@@ -96,6 +96,6 @@ public class GameCycle{
     }
     
     public Timeline getGameCycle(){
-        return gameCycle;
+        return ticker;
     }
 }
