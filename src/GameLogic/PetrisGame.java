@@ -16,13 +16,16 @@ public class PetrisGame{
     //comments
     protected final int HEIGHT = 15;
     protected final int WIDTH = 5;
-    //comments
-    protected int level = 1;
-    protected int score = 0;
-    protected int rowsCleared = 0;
-    protected double delay = 500;
+
+    protected double INITIAL_DELAY = 500; 
+  //comments
+    private int level = 1;
+    private int score = 0;
+    private int rowsCleared = 0;
+    protected double delay = INITIAL_DELAY;
     protected double speedIncrease = 0.8;
-    //comments
+  //comments
+
     protected boolean isRunning = false; //+ get&setters
     
     //initializes the GameGUI, ...
@@ -37,36 +40,31 @@ public class PetrisGame{
     protected Pentomino nextBlock;
 	
     public PetrisGame() {
-    	gridMatrix = new Color[HEIGHT][WIDTH];
-    	PentominoGenerator startGenerator = new PentominoGenerator();
-        nextBlock = startGenerator.getRandomPentomino();   
-        
-        view = new MainView(this);
-    	cycle = new GameCycle(this);
-        controlls = new Controlls(this);
-        
-        isRunning = true;      
+    	setupGame();
     }
-    public PetrisGame(String name) {
-        playerName = name;
-    	gridMatrix = new Color[HEIGHT][WIDTH];
-    	PentominoGenerator startGenerator = new PentominoGenerator();
+    
+    public PetrisGame(String name){
+    	playerName = name;   	
+        setupGame();
+    }
+    
+    public void setupGame() { 
+    	  gridMatrix = new Color[HEIGHT][WIDTH];
+    	  PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
         
         view = new MainView(this);
-    	cycle = new GameCycle(this);
+    	  cycle = new GameCycle(this);
         controlls = new Controlls(this);
         
-        isRunning = true;      
+       isRunning = true;  
     }
     
     public boolean gameOverCheck() {
-        //gives errors, to be fixed
         int[][] coordinates = nextBlock.getCoordinates();
         for (int i = 0; i < coordinates[0].length; i++){
            if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {
-    		//fallingBlock = null; //currently not needed
-    		System.out.println("GameOver"); //will be printed twice due to double use of gameOverCheck(), which is needed
+    		System.out.println("GameOver"); 
     		isRunning = false;
             return true;
             }              
@@ -91,7 +89,7 @@ public class PetrisGame{
     	level = 1;
     	score = 0;
     	rowsCleared = 0;
-    	delay = 500.0;
+    	delay = INITIAL_DELAY;
     	gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
     	nextBlock = startGenerator.getRandomPentomino();
@@ -140,7 +138,7 @@ public class PetrisGame{
             }
         }
     }    
-    //TODO Different with bot
+
     public int[][] rotate(int[][] coords, double degrees, boolean smallBoardRotation){//smallBoardRotation is a feature to rotate the block even if it would hit a wall in that position
             int rotationPoint = coords[0].length / 2;
             int reducedAmountX = coords[0][rotationPoint];

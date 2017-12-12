@@ -4,7 +4,7 @@ package Agent;
 import java.util.ArrayList;
 
 import GameLogic.DemoBotGame;
-import GameLogic.DemoOOGame;
+import GameLogic.Direction;
 
 import javafx.scene.paint.Color;
 
@@ -24,7 +24,10 @@ public class Agent{
 	//comment
 	public void makeMove() {
 		if(!game.gameOverCheck()) {
-			game.getFallingBlock().setCoordinates(bestMove()); //puts the falling block at the best position --> the GameCycle will then just regularly to move it down and place it.	
+			//moves the block to the evaluated position
+			game.getFallingBlock().setCoordinates(bestMove()); 	
+			//moves the block down which places it on the grid, because it should collide
+			game.move(Direction.DOWN);
 		}	
 	}
 	//creates an array of evaluations for each move and returns the move with the highest value
