@@ -7,7 +7,6 @@ import Agent.TrainEnvironment;
 import GameLogic.DemoBotGame;
 import GameLogic.DemoOOGame;
 import GameLogic.DemoRCGame;
-import GameLogic.GameMode;
 import GameLogic.PetrisGame;
 import Setup.Main;
 import javafx.event.ActionEvent;

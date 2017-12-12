@@ -15,8 +15,8 @@ public class Main extends Application {
 	private static Stage primaryStage;
         
         @Override
-	public void start(Stage primaryStage) throws Exception{
-                this.primaryStage = primaryStage;
+	public void start(Stage ps) throws Exception{
+                primaryStage = ps;
                             
                 MenuView menu = new MenuView();
                 Scene scene = new Scene(menu);

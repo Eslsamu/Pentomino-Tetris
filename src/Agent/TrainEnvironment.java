@@ -17,7 +17,8 @@ public class TrainEnvironment extends PetrisGame{
 
 	public TrainEnvironment() {
 		super();
-		agent = new DummyAgent(this);
+		agent = new DummyAgent();
+		spawn();
 	}
 	
 	@Override //neither a gamcecycle, view nor controlls are needed
@@ -25,7 +26,7 @@ public class TrainEnvironment extends PetrisGame{
 		gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
-        
+        System.out.println("setup training");
 	}
 	
 	@Override //This method is overridden because we do not need the isRunning variable here
@@ -33,6 +34,8 @@ public class TrainEnvironment extends PetrisGame{
 		fallingBlock = nextBlock;
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
+        
+        agent.makeMove(this);
 	}
 	
 	@Override //the agent directly places the falling block on the grid. in some cases a moveDown is still needed though
@@ -53,17 +56,23 @@ public class TrainEnvironment extends PetrisGame{
         for(int i = 0; i < whereToPlace[0].length; i++){
             gridMatrix[whereToPlace[1][i]][whereToPlace[0][i]] = colorIndex;
         }
+        clearRows();
         if(!gameOverCheck()) {
         	spawn();
         }
 	}
+	
 	
 	@Override 
 	 public boolean gameOverCheck() {
         int[][] coordinates = nextBlock.getCoordinates();
         for (int i = 0; i < coordinates[0].length; i++){
            if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {
-    		System.out.println("GameOver"); 
+    		
+        	System.out.println("GameOver");  
+        	System.out.println("Score: "+score);    
+        	testPrint();   
+        	   
             return true;
             }              
     	} 

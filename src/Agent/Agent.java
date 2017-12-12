@@ -5,27 +5,38 @@ import java.util.ArrayList;
 
 import GameLogic.DemoBotGame;
 import GameLogic.Direction;
+import GameLogic.PetrisGame;
 import javafx.scene.paint.Color;
 
-public class Agent extends Thread{
+public class Agent{
 	
-	private DemoBotGame game;
+	protected PetrisGame game;
 	
 	private double[] genes = {1,0.5,20,0.5};
 	
-	public Agent(DemoBotGame g) {
-		game = g;		
+	private int moveCount = 0;
+	
+	public Agent() {
+		//TODO genes
 	}
+
 	
 	//comment
-	public void makeMove() {
+	public void makeMove(PetrisGame g) {
+		
+		game = (DemoBotGame) g;
+		moveCount++;
 		if(!game.gameOverCheck()) {
 			//moves the block to the evaluated position
 			game.getFallingBlock().setCoordinates(bestMove()); 	
 			//moves the block down which places it on the grid, because it should collide
 			game.move(Direction.DOWN);
 		}	
+		else {
+			System.out.println("debug"+moveCount);
+		}
 	}
+	
 	//creates an array of evaluations for each move and returns the move with the highest value
 	public int[][] bestMove(){
 		

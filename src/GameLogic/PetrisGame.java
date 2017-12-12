@@ -19,9 +19,9 @@ public class PetrisGame{
     protected final int WIDTH = 5;
     protected double INITIAL_DELAY = 500; 
   //comments
-    private int level = 1;
-    private int score = 0;
-    private int rowsCleared = 0;
+    protected int level = 1;
+    protected int score = 0;
+    protected int rowsCleared = 0;
     protected double delay = INITIAL_DELAY;
     protected double speedIncrease = 0.8;
   //comments
@@ -202,7 +202,6 @@ public class PetrisGame{
                 if(checkCoords[1][i] + 1 >= gridMatrix.length || gridMatrix[ checkCoords[1][i] + 1 ][ checkCoords[0][i] ]!=null){
                    //here a new block gets created as it fell down to the ground
                    placePento(fallingBlock);
-                   clearRows();
                    return true;
                 }
             }   
@@ -247,8 +246,8 @@ public class PetrisGame{
             for(int i = 0; i < whereToPlace[0].length; i++){
                 gridMatrix[whereToPlace[1][i]][whereToPlace[0][i]] = colorIndex;
             }
-            gameOverCheck();
-            if(isRunning) {
+            clearRows();          
+            if(!gameOverCheck()) {
             	spawn();
             }
     }
