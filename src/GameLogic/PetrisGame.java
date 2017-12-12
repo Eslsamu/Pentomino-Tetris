@@ -1,7 +1,6 @@
 package GameLogic;
 import java.util.ArrayList;
 
-import Agent.Agent;
 
 import Dynamics.Controlls;
 import Dynamics.GameCycle;
@@ -12,11 +11,12 @@ import javafx.scene.paint.Color;
 
 
 public class PetrisGame{
-	//comments
-	private String playerName;
-	//comments
+    //comments
+    protected String playerName;
+    //comments
     protected final int HEIGHT = 15;
     protected final int WIDTH = 5;
+
     protected double INITIAL_DELAY = 500; 
   //comments
     protected int level = 1;
@@ -25,6 +25,7 @@ public class PetrisGame{
     protected double delay = INITIAL_DELAY;
     protected double speedIncrease = 0.8;
   //comments
+
     protected boolean isRunning = false; //+ get&setters
     
     //initializes the GameGUI, ...
@@ -47,16 +48,16 @@ public class PetrisGame{
         setupGame();
     }
     
-    public void setupGame() {
-    	gridMatrix = new Color[HEIGHT][WIDTH];
-    	PentominoGenerator startGenerator = new PentominoGenerator();
+    public void setupGame() { 
+    	  gridMatrix = new Color[HEIGHT][WIDTH];
+    	  PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
         
         view = new MainView(this);
-    	cycle = new GameCycle(this);
+    	  cycle = new GameCycle(this);
         controlls = new Controlls(this);
         
-        isRunning = true;  
+       isRunning = true;  
     }
     
     public boolean gameOverCheck() {
@@ -97,37 +98,44 @@ public class PetrisGame{
     }
     
     public void move(Direction aDirection){
-        if(!doesCollide(aDirection)&&isRunning) {
-            int[][] changeCoords = fallingBlock.getCoordinates();
-            switch(aDirection) {
-        	case DOWN:  {       		
-                for(int i = 0; i < changeCoords[1].length; i++){
-                    changeCoords[1][i]++;
-                }
-        		break;
-        	}	
-        	case RIGHT: {
-            	for(int i = 0; i < changeCoords[0].length; i++){
-                	changeCoords[0][i]++;
-            	}
-            	break;
-        	}        	
-        	case LEFT: {
-        		for(int i = 0; i < changeCoords[0].length; i++){
-        			changeCoords[0][i]--;
-        		}
-        		break;
-        	}
-        	case CLOCKWISE: {
-        		changeCoords = rotate(changeCoords, 90,true); //board is swapped around, so 90 instead of 270 
-                        break;
-        	}   
-        	case COUNTERCLOCKWISE: {
-        		 changeCoords = rotate(changeCoords, 270,true); 
-                         break; 
-        	}                    
+        if(aDirection == Direction.DROPDOWN){
+            while(!doesCollide(Direction.DOWN)){
+                move(Direction.DOWN);
             }
+        }
+        else{
+            if(!doesCollide(aDirection)&&isRunning) {
+                int[][] changeCoords = fallingBlock.getCoordinates();
+                switch(aDirection) {
+                    case DOWN:  {       		
+                    for(int i = 0; i < changeCoords[1].length; i++){
+                        changeCoords[1][i]++;
+                    }
+                            break;
+                    }	
+                    case RIGHT: {
+                    for(int i = 0; i < changeCoords[0].length; i++){
+                            changeCoords[0][i]++;
+                    }
+                    break;
+                    }        	
+                    case LEFT: {
+                            for(int i = 0; i < changeCoords[0].length; i++){
+                                    changeCoords[0][i]--;
+                            }
+                            break;
+                    }
+                    case CLOCKWISE: {
+                            changeCoords = rotate(changeCoords, 90,true); //board is swapped around, so 90 instead of 270 
+                            break;
+                    }   
+                    case COUNTERCLOCKWISE: {
+                             changeCoords = rotate(changeCoords, 270,true); 
+                             break; 
+                    }
+                }    
             fallingBlock.setCoordinates(changeCoords);
+            }
         }
     }    
 

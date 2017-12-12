@@ -44,9 +44,10 @@ public class GameCycle{
     }
     
     public void pause() {
-    		update.pause();
-    		gameCycle.pause();
-            game.setIsRunning(false);   		
+        update.pause();
+        gameCycle.pause();
+        game.setIsRunning(false);
+        gui.updateMain();        
     }
     
     

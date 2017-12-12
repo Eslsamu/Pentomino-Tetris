@@ -5,7 +5,11 @@ import java.util.ArrayList;
 
 import GameLogic.DemoBotGame;
 import GameLogic.Direction;
+<<<<<<< HEAD
 import GameLogic.PetrisGame;
+=======
+
+>>>>>>> 3b96da34955ac363863d5cf895f79ea7e6cd26ad
 import javafx.scene.paint.Color;
 
 public class Agent{
@@ -14,6 +18,7 @@ public class Agent{
 	
 	private double[] genes = {1,0.5,20,0.5};
 	
+<<<<<<< HEAD
 	private int moveCount = 0;
 	
 	public Agent() {
@@ -21,6 +26,15 @@ public class Agent{
 	}
 
 	
+=======
+        public Agent(DemoBotGame g, double[] genes){
+            this.genes = genes;
+            game = g;
+        }
+	public Agent(DemoBotGame g) {
+		game = g;		
+	}
+>>>>>>> 3b96da34955ac363863d5cf895f79ea7e6cd26ad
 	//comment
 	public void makeMove(PetrisGame g) {
 		

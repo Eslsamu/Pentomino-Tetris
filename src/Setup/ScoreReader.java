@@ -1,8 +1,5 @@
 package Setup;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -31,8 +28,10 @@ public class ScoreReader {
         return names;
     }
     public void updateFile(int score, String playerName){
-        //update file, we still need a window that will get players name, Stijn is working on it
-        updateFile(score, playerName , getScores(), getNames());
+        //if there is no name available it wont add it to highscore
+        if(playerName != null && !playerName.equals("null")){
+            updateFile(score, playerName , getScores(), getNames());
+        }    
     }
     public String[] readData(){
         String[] data = new String[numberOfScores*3];
