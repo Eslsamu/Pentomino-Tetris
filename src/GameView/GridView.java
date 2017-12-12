@@ -27,7 +27,7 @@ public class GridView extends Pane{
 	            }
 	        } 
 	        //draw the falling block --> exception for the unstarted game
-	        if(game.getIsRunning()&&game.getFallingBlock()!=null){
+	        if(!game.gameOverCheck() && game.getFallingBlock() != null){
 	            int[][] fallingBlockCoords =  game.getFallingBlock().getCoordinates();
 	            Color color = game.getFallingBlock().getColorIndex();
 	
