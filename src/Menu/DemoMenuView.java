@@ -3,6 +3,7 @@ package Menu;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.Scene;
+import Agent.TrainEnvironment;
 import GameLogic.DemoBotGame;
 import GameLogic.DemoOOGame;
 import GameLogic.DemoRCGame;
@@ -36,6 +37,10 @@ public class DemoMenuView extends GridPane{
         bot.setMinSize(150, 50);
         bot.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
         
+        Button training = new Button("Training");
+        bot.setMinSize(150, 50);
+        bot.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
+        
         Button optimalOrdering = new Button("Optimal ordering");
         optimalOrdering.setMinSize(150, 50);
         optimalOrdering.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
@@ -50,10 +55,12 @@ public class DemoMenuView extends GridPane{
         
         setAlignment(Pos.CENTER);
         setHalignment(bot, HPos.CENTER);
+        setHalignment(training, HPos.CENTER);
         setHalignment(optimalOrdering, HPos.CENTER);
         setHalignment(clearRow, HPos.CENTER);
         setHalignment(startMenu, HPos.CENTER);
         setVgap(10);
+        
         
         bot.setOnAction(new EventHandler<ActionEvent>(){
             @Override public void handle(ActionEvent e) {
@@ -74,6 +81,13 @@ public class DemoMenuView extends GridPane{
                primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
             }
        });
+        
+        training.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override public void handle(ActionEvent e) {
+                TrainEnvironment te = new TrainEnvironment();              
+             }
+        });
+        
         
         optimalOrdering.setOnAction(new EventHandler<ActionEvent>(){
              @Override public void handle(ActionEvent e) {
@@ -138,6 +152,6 @@ public class DemoMenuView extends GridPane{
         add(optimalOrdering, 0, 1);
         add(clearRow, 0, 2);
         add(startMenu, 0, 3);
-        
+        add(training, 1,0);
 	}
 }
