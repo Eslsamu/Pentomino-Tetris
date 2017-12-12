@@ -77,13 +77,13 @@ public class GameCycle{
     }
     
     public void playGame(){
-        //this method is used in the gameCycle timeline, it basically creates a new timeline each time it is called
+        //this method is used in the timer timeline, it basically creates a new timeline each time it is called
         //this is needed so that the speed is updated
+    	
         //first stop the timeline
         ticker.stop();
         //create a new one
-        game.move(Direction.DOWN);
-        
+        game.move(Direction.DOWN);       
         ticker = new Timeline(new KeyFrame(
             Duration.millis(game.getSpeed()),
             ae -> playGame()));

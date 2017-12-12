@@ -29,8 +29,6 @@ public class Agent{
 		if(!game.gameOverCheck()) {
 			//moves the block to the evaluated position
 			game.getFallingBlock().setCoordinates(bestMove()); 	
-			//moves the block down which places it on the grid, because it should collide
-			game.move(Direction.DOWN);
 		}	
 		else {
 			System.out.println("debug"+moveCount);
@@ -43,7 +41,7 @@ public class Agent{
 		ArrayList<int[][]> moveList = possibleMoves2();
 		//ArrayList<int[][]> moveList2 = possibleMoves2();
 		
-		moveList.addAll(moveList);
+		//moveList.addAll(moveList);
 		
 		double[] evaluations = new double[moveList.size()];
 		int best = 0;
@@ -57,7 +55,6 @@ public class Agent{
 				best = j;	
 			}			
 		}
-		
 		
 		return moveList.get(best);
 	}
@@ -79,10 +76,10 @@ public class Agent{
              gridCopy[move[1][k]][move[0][k]] = Color.PURPLE;				            												
          }        
          
-         value -= genes[0]*maxHeight(gridCopy);
+         //value -= genes[0]*maxHeight(gridCopy);
          value -= genes[1]*cumulativeHeight(gridCopy);
          value += genes[2]*instantFullRows(gridCopy);
-         value -= genes[3]*countHoles(gridCopy);
+         //value -= genes[3]*countHoles(gridCopy);
          //TODO       
 		return value;
 	}
@@ -204,7 +201,6 @@ public class Agent{
 		ArrayList<int[][]> moveList = new ArrayList<int[][]>();
 		//copy of the grid to check if a move is possible
 		Color[][] grid = new Color[game.getGrid().length][game.getGrid()[0].length];
-		//TODO
 		for(int i = 0; i < grid.length; i++) {
 			for(int j = 0; j < grid[0].length;j++) {
 				grid[i][j]=game.getGrid()[i][j];
