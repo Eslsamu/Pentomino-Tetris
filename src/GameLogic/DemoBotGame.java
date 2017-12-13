@@ -11,16 +11,20 @@ import javafx.scene.paint.Color;
 
 public class DemoBotGame extends PetrisGame{
 	
+	private static double[] genomes = {1,1,1};
     private Agent agent;
     
     public DemoBotGame() {
     	super("Roboter");
-    	agent = new Agent();
+    	agent = new Agent(genomes);
     	//To better showcase the actions, the initial delay is increased
     	INITIAL_DELAY = 500;  
     	delay = INITIAL_DELAY;
     }
     
+    public static void setDNA(double[] g) {
+		genomes = g;
+	}
     
     @Override	//in the bot perfomance demo we will not initialize controlls and have a special game cycle for the bot
     public void setupGame() {

@@ -12,37 +12,28 @@ public class Agent{
 	
 	protected PetrisGame game;
 	
-	private double[] genes = {1,0.5,20,0.5};
+	protected double[] genes;
 	
-	private int moveCount = 0;
-	
-	public Agent() {
-		//TODO genes
+	public Agent(double[] g) {
+		genes = g;
 	}
-
 	
 	//comment
 	public void makeMove(PetrisGame g) {
 		
 		game = (DemoBotGame) g;
-		moveCount++;
-		if(!game.gameOverCheck()) {
+		
+		ArrayList<int[][]> moveList = possibleMoves2();
+		
+		if(!game.gameOverCheck() && moveList.size()!=0) {
 			//moves the block to the evaluated position
-			game.getFallingBlock().setCoordinates(bestMove()); 	
+			game.getFallingBlock().setCoordinates(bestMove(moveList)); 	
 		}	
-		else {
-			System.out.println("debug"+moveCount);
-		}
 	}
 	
 	//creates an array of evaluations for each move and returns the move with the highest value
-	public int[][] bestMove(){
-		
-		ArrayList<int[][]> moveList = possibleMoves2();
-		//ArrayList<int[][]> moveList2 = possibleMoves2();
-		
-		//moveList.addAll(moveList);
-		
+	public int[][] bestMove(ArrayList<int[][]> moveList){
+				
 		double[] evaluations = new double[moveList.size()];
 		int best = 0;
 		
@@ -54,6 +45,10 @@ public class Agent{
 			if(evaluations[j]>evaluations[best]) {
 				best = j;	
 			}			
+		}
+		
+		if(moveList.size()==0) {
+			System.out.println("mistake");
 		}
 		
 		return moveList.get(best);
@@ -76,7 +71,7 @@ public class Agent{
              gridCopy[move[1][k]][move[0][k]] = Color.PURPLE;				            												
          }        
          
-         //value -= genes[0]*maxHeight(gridCopy);
+         value -= genes[0]*maxHeight(gridCopy);
          value -= genes[1]*cumulativeHeight(gridCopy);
          value += genes[2]*instantFullRows(gridCopy);
          //value -= genes[3]*countHoles(gridCopy);
@@ -221,7 +216,7 @@ public class Agent{
 							}
 						}
 						//rotate without smallBoardRotation
-						checkCoords = game.rotate(checkCoords, rota*90, false);	
+						checkCoords = game.rotate(checkCoords, rota*90, true);	
 						
 						//see getPivotPiece
 						int pivotPiece = getLeftMostPiece(checkCoords);
@@ -231,6 +226,8 @@ public class Agent{
 						for(int i = 0; i < checkCoords[0].length; i++) {
 							checkCoords[0][i] += distanceX;
 						}
+						
+						
 						
 						//moves the block down until it "bumps" a surface, then adds it with y-1 to the list
 						for(int row = 0; row < grid.length; row++) {
@@ -244,7 +241,15 @@ public class Agent{
 								if(!moveCollides(finalCoords,grid)) {	
 									moveList.add(finalCoords);	
 								}
-								break;
+								else{
+									/*
+									for(int i = 0; i < finalCoords[0].length;i++) {
+										System.out.print(finalCoords[0][i]);
+										System.out.print(finalCoords[1][i]+" ");
+									}
+									
+									System.out.println("did collide");*/
+								}
 							}
 							else {
 								for(int j = 0; j < checkCoords[0].length;j++) {

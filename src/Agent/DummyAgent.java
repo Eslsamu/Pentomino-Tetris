@@ -1,24 +1,33 @@
 package Agent;
 
+import java.util.ArrayList;
+
 import GameLogic.DemoBotGame;
 import GameLogic.Direction;
 import GameLogic.PetrisGame;
 
 public class DummyAgent extends Agent{
 	
-	public DummyAgent() {		
-
+	
+	public DummyAgent(double[] g) {	
+		super(g);
 	}
 	
 	@Override 
 	//comment
-		public void makeMove(PetrisGame g) {			
-			super.game = (TrainEnvironment) g;			
-			if(!game.gameOverCheck()) {
-				//moves the block to the evaluated position
-				game.getFallingBlock().setCoordinates(bestMove()); 	
-				//moves the block down which places it on the grid, because it should collide
-				game.move(Direction.DOWN);
-			}	
-		}
+public void makeMove(PetrisGame g) {
+		
+		game = (TrainEnvironment) g;
+		
+		ArrayList<int[][]> moveList = possibleMoves2();
+		
+		if(!game.gameOverCheck() && moveList.size()!=0) {
+			//moves the block to the evaluated position
+			game.getFallingBlock().setCoordinates(bestMove(moveList)); 	
+			game.move(Direction.DOWN);
+		}	
+			
+	}
+
+	
 }
