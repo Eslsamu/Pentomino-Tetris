@@ -1,28 +1,25 @@
 package Agent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
 
-import Dynamics.Controlls;
-import Dynamics.GameCycle;
+import java.util.Arrays;
+
 import GameLogic.DemoBotGame;
 import GameLogic.Direction;
 import GameLogic.Pentomino;
 import GameLogic.PentominoGenerator;
 import GameLogic.PetrisGame;
-import GameView.MainView;
-import javafx.scene.Scene;
+
 import javafx.scene.paint.Color;
 
 //A simplified version of the tetris game to train a bot
 public class TrainEnvironment extends PetrisGame{
 	
-	private static final double MUTATION_RATE = 0.3;
+	private static final double MUTATION_RATE = 0.2;
 	private static final double MUTATION_STEP = 0.2;
 	private static final double GENERATIONS = 10;
-	private static final int GAME_ITERATIONS = 100;
+	private static final int GAME_ITERATIONS = 50;
 	private static final int POPULATION_SIZE = 50;
+	private static final double ELITE_RATIO = 0.3;
 	
 	private DummyAgent agent;
 	private double[] genes;
@@ -76,14 +73,14 @@ public class TrainEnvironment extends PetrisGame{
 			System.out.println("average: "+averagePerformance);
 			
 			
-			//50% of the fittest agents are stored in an array of "elites"
-			DummyAgent[] elites = new DummyAgent[population.length/2];		
+			//x% of the fittest agents are stored in an array of "elites"
+			DummyAgent[] elites = new DummyAgent[(int)(population.length*ELITE_RATIO)];		
 			for(int i = 0; i < elites.length; i++) {
 				elites[i] = population[i];
 			}
 			
-			//50% of the population get's replaced by new children
-			DummyAgent[] children = new DummyAgent[population.length/2];
+			//x% of the population get's replaced by new children
+			DummyAgent[] children = new DummyAgent[population.length-elites.length];
 			
 			//the two fittest agents procreate first
 			children[0] = procreate(elites[0],elites[1]);
@@ -97,10 +94,13 @@ public class TrainEnvironment extends PetrisGame{
 			}
 			
 			//creates a new population array consisting of the elite agents and their children
-			for(int i = 0; i < population.length/2; i++) {
-				population[i] = elites[i];
-				population[i+population.length/2] = children[i];
+			for(int i = 0; i < elites.length; i++) {
+				population[i] = elites[i];				
 			}	
+			for(int i = 0; i < children.length; i++) {
+				population[elites.length+i] = children[i];
+			}
+			
 			//resets the score of each agent in the population
 			for(int i = 0; i < population.length; i++) {
 				population[i].setScore(0);

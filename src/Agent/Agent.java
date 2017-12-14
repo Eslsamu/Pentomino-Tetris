@@ -36,7 +36,7 @@ public class Agent{
 		if(!game.gameOverCheck() && moveList.size()!=0) {
 			//moves the block to the best evaluated grid position considering moving the next block 
 			int[][] nextBlock = game.getNextBlock().getCoordinates();
-			game.getFallingBlock().setCoordinates(bestMove(game.getGrid(),moveList,true, nextBlock)); 	
+			game.getFallingBlock().setCoordinates(bestMove(game.getGrid(),moveList,false, nextBlock)); 	
 		}	
 	}
 	
