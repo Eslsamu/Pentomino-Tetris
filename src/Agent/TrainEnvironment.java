@@ -18,9 +18,9 @@ import javafx.scene.paint.Color;
 //A simplified version of the tetris game to train a bot
 public class TrainEnvironment extends PetrisGame{
 	
-	private static final double MUTATION_RATE = 0.2;
+	private static final double MUTATION_RATE = 0.5;
 	private static final double MUTATION_STEP = 0.1;
-	private static final double GENERATIONS = 200;
+	private static final double GENERATIONS = 10;
 	
 	private DummyAgent agent;
 
@@ -63,10 +63,10 @@ public class TrainEnvironment extends PetrisGame{
 			}
 			
 			
-			//each agent plays 100 games it's perfomance is avaraged and saved in the fitness array
+			//each agent plays 20 games it's perfomance is avaraged and saved in the fitness array
 			for(int i = 0; i < fitness.length; i ++) {
 				agent = new DummyAgent(population[i]);			
-				for(int j = 0; j < 100; j++) {
+				for(int j = 0; j < 2; j++) {
 					restart();
 					fitness[i].setValue(fitness[i].getValue() + (score/100));
 				}					
@@ -126,33 +126,17 @@ public class TrainEnvironment extends PetrisGame{
 		
 		return fittestAgent;
 	}
-	
+	//uniform crossover
 	public double[] procreate(double[] father, double[] mother) {
 		//returns child genes
-		double[] child = new double[5];
+		double[] child = new double[father.length];
 		
-		//chooses a gene randomly from the father or the mothers side
-		Random ran = new Random();
-		child[0] = (ran.nextInt() % 2 == 0) ? father[0] : mother[0];
-		child[1] = (ran.nextInt() % 2 == 0) ? father[1] : mother[1];
-		child[2] = (ran.nextInt() % 2 == 0) ? father[2] : mother[2];
-		child[3] = (ran.nextInt() % 2 == 0) ? father[3] : mother[3];
-		child[4] = (ran.nextInt() % 2 == 0) ? father[4] : mother[4];
-		//mutates each gene via a mutationstep		
-		if(Math.random()<MUTATION_RATE) {
-			child[0] += child[0]*MUTATION_STEP;
-		}
-		if(Math.random()<MUTATION_RATE) {
-			child[1] += child[1]*MUTATION_STEP;
-		}
-		if(Math.random()<MUTATION_RATE) {
-			child[2] += child[2]*MUTATION_STEP;
-		}
-		if(Math.random()<MUTATION_RATE) {
-			child[3] += child[3]*MUTATION_STEP;
-		}
-		if(Math.random()<MUTATION_RATE) {
-			child[4] += child[4]*MUTATION_STEP;
+		//chooses a gene randomly from the father or the mothers side and adds a mutationstep via the mutationrate
+		for(int i = 0; i < child.length; i++) {
+			child[i] = (father[i]+mother[i])/2;
+			if(Math.random()<MUTATION_RATE) {
+				child[i] += child[0]*MUTATION_STEP;
+			}
 		}
 		return child;
 	}
