@@ -18,6 +18,31 @@ public class Agent{
 		genes = g;
 	}
 	
+	public static void main(String[] args) {
+		double[] testGenes = {1,1,1,1,1};
+		Agent testAgent = new Agent(testGenes);
+		Color[][] testGrid = {  {null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,null,null},
+								{null,null,null,Color.BEIGE,Color.BEIGE},
+								{null,null,Color.BEIGE,null,Color.BEIGE},
+								};
+		System.out.println(testAgent.bumpiness(testGrid));
+		System.out.println(testAgent.maxHeight(testGrid));
+		System.out.println(testAgent.cumulativeHeight(testGrid));
+		System.out.println(testAgent.countHoles(testGrid));
+		System.out.println(testAgent.instantFullRows(testGrid));
+	}
+	
 	//comment
 	public void makeMove(PetrisGame g) {
 		
@@ -74,28 +99,39 @@ public class Agent{
          value -= genes[0]*maxHeight(gridCopy);
          value -= genes[1]*cumulativeHeight(gridCopy);
          value += genes[2]*instantFullRows(gridCopy);
-         //value -= genes[3]*countHoles(gridCopy);
+         value -= genes[3]*countHoles(gridCopy);
+         value -= genes[4]*bumpiness(gridCopy);
          //TODO       
 		return value;
 	}
 	
 	
-	//loops through columns from bottom to top, once we find a null value we check if there is a filled square somewhere
-	  //above it in the rest of the column, if so it's the square with null value is a hole
+	
 	  public int countHoles(Color[][] grid){
 	      int holes = 0;
-	      for(int i = 0; i < grid[0].length; i++){
-	        for(int j = grid.length-1; j >= 0; j--){
-	            if(grid[j][i] == null){
-	                for(int k = j; k >= 0; k--){
-	                  if(grid[k][i] != null){
-	                    holes++;
-	                    j=i-1;
-	                    break;
-	                  }
-	                }
-	            }
-	        }
+	      for(int col = 0; col < grid[0].length; col++) {
+	    	  for(int row = grid.length-1; row >= 0; row--) {//iterates from bottom to top
+	    		  if(grid[row][col]==null) { //searches for empty cells
+	    			  int holesize = 0;
+	    			  for(int i = row; i >= 0; i--) {
+	    				  if(i == 0 ) {
+	    					  holesize = 0; //detected the distance from the highest piece in the col to the top --> not a hole
+	    				  }
+	    				  else {
+	    					  if(grid[i][col]==null) {
+	    						  holesize++;		//measures how many empty cells there are above the detected empty cell
+	    					  }
+	    					  else {
+	    						  holes += holesize;	//adds the holesize to the total number of holes
+	    						  row=i;				//jumps to cell to the first cell above that is not empty
+	    						  break;				
+	    					  }
+	    				  }
+	    			  }
+	    		  }
+	    	  }
+	       
+	        
 	      }
 	    return holes;    
 	  }
@@ -132,6 +168,17 @@ public class Agent{
 				max = grid.length - getPivotRow(col,grid);
 		}
 		return max;
+	}
+	
+	//returns the level of bumpiness -> difference between two neighboring columnheights
+	public int bumpiness(Color[][] grid) {
+		int bumpiness = 0;
+		for(int col = 0; col < grid[0].length-1; col++) { //-1 because we do not want to count the last col
+			int col1 = grid.length - getPivotRow(col,grid);
+			int col2 = grid.length - getPivotRow(col+1,grid);
+			bumpiness = Math.abs(col1 - col2);
+		}
+		return bumpiness;
 	}
 	
 	// returns a list of possible places for the falling block --> We will see what method get's better results

@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 
 public class DemoBotGame extends PetrisGame{
 	
-	private static double[] genomes = {1,1,1};
+	private static double[] genomes = {1,1,10,1};
     private Agent agent;
     
     public DemoBotGame() {
@@ -20,6 +20,11 @@ public class DemoBotGame extends PetrisGame{
     	//To better showcase the actions, the initial delay is increased
     	INITIAL_DELAY = 500;  
     	delay = INITIAL_DELAY;
+    	System.out.println("Genomes are initialized:");
+		System.out.println(genomes[0]);
+		System.out.println(genomes[1]);
+		System.out.println(genomes[2]);
+		System.out.println(genomes[3]);
     }
     
     public static void setDNA(double[] g) {

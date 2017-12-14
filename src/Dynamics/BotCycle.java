@@ -20,7 +20,6 @@ public class BotCycle extends GameCycle{
 	
 	@Override 
 	public void playGame(){
-    	System.out.println("tick");
 		agent = bgame.getAgent();
 		
 		agent.makeMove(bgame);
