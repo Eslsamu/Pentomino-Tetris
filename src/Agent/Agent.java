@@ -5,60 +5,39 @@ import java.util.ArrayList;
 
 import GameLogic.DemoBotGame;
 import GameLogic.Direction;
-import GameLogic.PetrisGame;
+
 import javafx.scene.paint.Color;
 
 public class Agent{
 	
-	protected PetrisGame game;
+	private DemoBotGame game;
 	
-	protected double[] genes;
+	private double[] genes = {1,0.5,20,0.5};
 	
-	public Agent(double[] g) {
-		genes = g;
+        public Agent(DemoBotGame g, double[] genes){
+            this.genes = genes;
+            game = g;
+        }
+	public Agent(DemoBotGame g) {
+		game = g;		
 	}
-	
-	public static void main(String[] args) {
-		double[] testGenes = {1,1,1,1,1};
-		Agent testAgent = new Agent(testGenes);
-		Color[][] testGrid = {  {null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,Color.BEIGE,Color.BEIGE},
-								{null,null,Color.BEIGE,null,Color.BEIGE},
-								};
-		System.out.println(testAgent.bumpiness(testGrid));
-		System.out.println(testAgent.maxHeight(testGrid));
-		System.out.println(testAgent.cumulativeHeight(testGrid));
-		System.out.println(testAgent.countHoles(testGrid));
-		System.out.println(testAgent.instantFullRows(testGrid));
-	}
-	
 	//comment
-	public void makeMove(PetrisGame g) {
-		
-		game = (DemoBotGame) g;
-		
-		ArrayList<int[][]> moveList = possibleMoves2();
-		
-		if(!game.gameOverCheck() && moveList.size()!=0) {
+	public void makeMove() {
+		if(!game.gameOverCheck()) {
 			//moves the block to the evaluated position
-			game.getFallingBlock().setCoordinates(bestMove(moveList)); 	
+			game.getFallingBlock().setCoordinates(bestMove()); 	
+			//moves the block down which places it on the grid, because it should collide
+			game.move(Direction.DOWN);
 		}	
 	}
-	
 	//creates an array of evaluations for each move and returns the move with the highest value
-	public int[][] bestMove(ArrayList<int[][]> moveList){
-				
+	public int[][] bestMove(){
+		
+		ArrayList<int[][]> moveList = possibleMoves2();
+		//ArrayList<int[][]> moveList2 = possibleMoves2();
+		
+		moveList.addAll(moveList);
+		
 		double[] evaluations = new double[moveList.size()];
 		int best = 0;
 		
@@ -72,9 +51,6 @@ public class Agent{
 			}			
 		}
 		
-		if(moveList.size()==0) {
-			System.out.println("mistake");
-		}
 		
 		return moveList.get(best);
 	}
@@ -100,38 +76,27 @@ public class Agent{
          value -= genes[1]*cumulativeHeight(gridCopy);
          value += genes[2]*instantFullRows(gridCopy);
          value -= genes[3]*countHoles(gridCopy);
-         value -= genes[4]*bumpiness(gridCopy);
          //TODO       
 		return value;
 	}
 	
 	
-	
+	//loops through columns from bottom to top, once we find a null value we check if there is a filled square somewhere
+	  //above it in the rest of the column, if so it's the square with null value is a hole
 	  public int countHoles(Color[][] grid){
 	      int holes = 0;
-	      for(int col = 0; col < grid[0].length; col++) {
-	    	  for(int row = grid.length-1; row >= 0; row--) {//iterates from bottom to top
-	    		  if(grid[row][col]==null) { //searches for empty cells
-	    			  int holesize = 0;
-	    			  for(int i = row; i >= 0; i--) {
-	    				  if(i == 0 ) {
-	    					  holesize = 0; //detected the distance from the highest piece in the col to the top --> not a hole
-	    				  }
-	    				  else {
-	    					  if(grid[i][col]==null) {
-	    						  holesize++;		//measures how many empty cells there are above the detected empty cell
-	    					  }
-	    					  else {
-	    						  holes += holesize;	//adds the holesize to the total number of holes
-	    						  row=i;				//jumps to cell to the first cell above that is not empty
-	    						  break;				
-	    					  }
-	    				  }
-	    			  }
-	    		  }
-	    	  }
-	       
-	        
+	      for(int i = 0; i < grid[0].length; i++){
+	        for(int j = grid.length-1; j >= 0; j--){
+	            if(grid[j][i] == null){
+	                for(int k = j; k >= 0; k--){
+	                  if(grid[k][i] != null){
+	                    holes++;
+	                    j=i-1;
+	                    break;
+	                  }
+	                }
+	            }
+	        }
 	      }
 	    return holes;    
 	  }
@@ -168,17 +133,6 @@ public class Agent{
 				max = grid.length - getPivotRow(col,grid);
 		}
 		return max;
-	}
-	
-	//returns the level of bumpiness -> difference between two neighboring columnheights
-	public int bumpiness(Color[][] grid) {
-		int bumpiness = 0;
-		for(int col = 0; col < grid[0].length-1; col++) { //-1 because we do not want to count the last col
-			int col1 = grid.length - getPivotRow(col,grid);
-			int col2 = grid.length - getPivotRow(col+1,grid);
-			bumpiness = Math.abs(col1 - col2);
-		}
-		return bumpiness;
 	}
 	
 	// returns a list of possible places for the falling block --> We will see what method get's better results
@@ -243,6 +197,7 @@ public class Agent{
 		ArrayList<int[][]> moveList = new ArrayList<int[][]>();
 		//copy of the grid to check if a move is possible
 		Color[][] grid = new Color[game.getGrid().length][game.getGrid()[0].length];
+		//TODO
 		for(int i = 0; i < grid.length; i++) {
 			for(int j = 0; j < grid[0].length;j++) {
 				grid[i][j]=game.getGrid()[i][j];
@@ -263,7 +218,7 @@ public class Agent{
 							}
 						}
 						//rotate without smallBoardRotation
-						checkCoords = game.rotate(checkCoords, rota*90, true);	
+						checkCoords = game.rotate(checkCoords, rota*90, false);	
 						
 						//see getPivotPiece
 						int pivotPiece = getLeftMostPiece(checkCoords);
@@ -273,8 +228,6 @@ public class Agent{
 						for(int i = 0; i < checkCoords[0].length; i++) {
 							checkCoords[0][i] += distanceX;
 						}
-						
-						
 						
 						//moves the block down until it "bumps" a surface, then adds it with y-1 to the list
 						for(int row = 0; row < grid.length; row++) {
@@ -288,15 +241,7 @@ public class Agent{
 								if(!moveCollides(finalCoords,grid)) {	
 									moveList.add(finalCoords);	
 								}
-								else{
-									/*
-									for(int i = 0; i < finalCoords[0].length;i++) {
-										System.out.print(finalCoords[0][i]);
-										System.out.print(finalCoords[1][i]+" ");
-									}
-									
-									System.out.println("did collide");*/
-								}
+								break;
 							}
 							else {
 								for(int j = 0; j < checkCoords[0].length;j++) {

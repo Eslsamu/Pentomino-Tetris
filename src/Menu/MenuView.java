@@ -21,7 +21,7 @@ public class MenuView extends GridPane{
 	
 	public MenuView() {
 		
-		Button start = new Button("Play");
+            Button start = new Button("Play");
 	    start.setMinSize(150, 50);
 	    start.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
 	    
@@ -46,15 +46,15 @@ public class MenuView extends GridPane{
 	    start.setOnAction(new EventHandler<ActionEvent>(){
 	         @Override public void handle(ActionEvent e) {
 	        	 
-	        	 PlayerNameView pvn = new PlayerNameView(); 
-	        	 Scene scene = new Scene(pvn);
+                    PlayerNameView pvn = new PlayerNameView(); 
+                    Scene scene = new Scene(pvn);
 	        	 
 	        	//use the Stage from main class
 	             Stage primaryStage = Main.getStage();
 	             
 	             //change Scene to scene from GameCycle
 	             primaryStage.setScene(scene);
-	             primaryStage.setWidth(200);
+	             primaryStage.setWidth(300);
 	             primaryStage.setHeight(200);
 	             
 	             //this following code places the Window in the centre
@@ -65,8 +65,8 @@ public class MenuView extends GridPane{
 	    });
 	    presentation.setOnAction(new EventHandler<ActionEvent>(){
 	         @Override public void handle(ActionEvent e) {
-	        	DemoMenuView demo = new DemoMenuView();
-	        	Scene scene = new Scene(demo);
+                    DemoMenuView demo = new DemoMenuView();
+                    Scene scene = new Scene(demo);
 	        	 
 	            //use the Stage from main class
 	            Stage primaryStage = Main.getStage();
