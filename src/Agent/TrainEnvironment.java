@@ -14,10 +14,10 @@ import javafx.scene.paint.Color;
 //A simplified version of the tetris game to train a bot
 public class TrainEnvironment extends PetrisGame{
 	
-	private static final double MUTATION_RATE = 0.2;
-	private static final double MUTATION_STEP = 0.2;
-	private static final double GENERATIONS = 10;
-	private static final int GAME_ITERATIONS = 50;
+	private static final double MUTATION_RATE = 0.5;
+	private static final double MUTATION_STEP = 0.1;
+	private static final double GENERATIONS = 100;
+	private static final int GAME_ITERATIONS = 25;
 	private static final int POPULATION_SIZE = 50;
 	private static final double ELITE_RATIO = 0.3;
 	
@@ -131,7 +131,7 @@ public class TrainEnvironment extends PetrisGame{
 			
 			//adds via the mutationrate a mutationstep to each gene
 			if(Math.random()<MUTATION_RATE) {
-				childGenes[i] += childGenes[0]*MUTATION_STEP;
+				childGenes[i] += childGenes[i]*MUTATION_STEP;
 			}
 		}
 
