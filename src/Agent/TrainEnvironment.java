@@ -18,126 +18,124 @@ import javafx.scene.paint.Color;
 //A simplified version of the tetris game to train a bot
 public class TrainEnvironment extends PetrisGame{
 	
-	private static final double MUTATION_RATE = 0.5;
-	private static final double MUTATION_STEP = 0.1;
+	private static final double MUTATION_RATE = 0.3;
+	private static final double MUTATION_STEP = 0.2;
 	private static final double GENERATIONS = 10;
+	private static final int GAME_ITERATIONS = 100;
+	private static final int POPULATION_SIZE = 50;
 	
 	private DummyAgent agent;
-
+	private double[] genes;
+	//the genomes that had the best score after all iterations
+	private DummyAgent fittestAgent;
+	
 	public TrainEnvironment() {
 		super();
-		double[] genomes = evolve();
-		System.out.println(genomes[0]);
-		System.out.println(genomes[1]);
-		System.out.println(genomes[2]);
-		System.out.println(genomes[3]);
-		System.out.println(genomes[4]);
+		genes = DemoBotGame.getDNA();
+		evolve();
 		
-		DemoBotGame.setDNA(genomes);
+		DemoBotGame.setDNA(fittestAgent.getGenes());
 	}
 	
 	
 	
-	public double[] evolve() {
-		//initialize a population of 50 agents
-		double[][] population = new double[50][5];
-		
-		//the genomes that had the best score after all iterations
-		double[] fittestAgent = new double[5];
+	public void evolve() {
+		//initialize a population of agents
+		DummyAgent[] population = new DummyAgent[POPULATION_SIZE];
 				
 		//assign each individual agent with random genes
 		for(int i = 0; i < population.length; i++) {
-			population[i][0] = 0.5;
-			population[i][1] = 0.5;
-			population[i][2] = 0.5;
-			population[i][3] = 0.5;
-			population[i][4] = 0.5;
+			double[] ranGenes = new double[genes.length];
+			for(int j = 0; j < genes.length; j++) {
+				ranGenes[j] = Math.random();
+			}			
+			population[i] = new DummyAgent(ranGenes);
 		}
 		
-		for(int g = 0; g < GENERATIONS; g++) {
-			//this array stores the performance of each agent. using a Pair object is a simple pattern 
-			//to sort an array of values without loosing track of its past indexes
-			Pair[] fitness = new Pair[population.length];
-			for(int i = 0; i < fitness.length; i++) {
-				fitness[i] = new Pair(i);
-			}
-			
-			
-			//each agent plays 20 games it's perfomance is avaraged and saved in the fitness array
-			for(int i = 0; i < fitness.length; i ++) {
-				agent = new DummyAgent(population[i]);			
-				for(int j = 0; j < 2; j++) {
+		for(int g = 0; g < GENERATIONS; g++) {						
+			//each agent plays x games and their average score is assigned to them
+			for(int i = 0; i < population.length; i ++) {
+				agent = population[i];			
+				for(int j = 0; j < GAME_ITERATIONS; j++) {
 					restart();
-					fitness[i].setValue(fitness[i].getValue() + (score/100));
+					population[i].setScore(population[i].getScore() + (score/GAME_ITERATIONS));
 				}					
 			}
 			
-			//sorts the fitness array in descending order
-			Arrays.sort(fitness);
-			
-			//the 0th index is the agent with the best performance
-			fittestAgent = population[fitness[0].getIndex()];
+			//sorts the population in descending order comparing their score
+			Arrays.sort(population);
 			
 			//prints the out the performance of this generation
-			System.out.println("best: "+fitness[0].getValue());
-			System.out.println("worst: "+fitness[fitness.length-1].getValue());
+			System.out.println("best: "+population[0].getScore());
+			System.out.println("worst: "+population[population.length-1].getScore());
 			
 			double averagePerformance = 0;
-			for(int i = 0; i < fitness.length; i++) {
-				averagePerformance += fitness[i].getValue()/fitness.length;
+			for(int i = 0; i < population.length; i++) {
+				averagePerformance += population[i].getScore()/population.length;
 			}
 			System.out.println("average: "+averagePerformance);
 			
 			
-			//50% of the fittest genomes are stored in an array of "elites"
-			double[][] elites = new double[population.length/2][5];
-			
+			//50% of the fittest agents are stored in an array of "elites"
+			DummyAgent[] elites = new DummyAgent[population.length/2];		
 			for(int i = 0; i < elites.length; i++) {
-				elites[i][0] = population[fitness[i].getIndex()][0];
-				elites[i][1] = population[fitness[i].getIndex()][1];
-				elites[i][2] = population[fitness[i].getIndex()][2];
-				elites[i][3] = population[fitness[i].getIndex()][3];
-				elites[i][4] = population[fitness[i].getIndex()][4];
+				elites[i] = population[i];
 			}
 			
 			//50% of the population get's replaced by new children
-			double[][] children = new double[population.length/2][5];
+			DummyAgent[] children = new DummyAgent[population.length/2];
 			
-			// the two fittest genomes procreate first
+			//the two fittest agents procreate first
 			children[0] = procreate(elites[0],elites[1]);
 			children[1] = procreate(elites[0],elites[1]);
 			
-			//now the left elite genomes procreate with a random partner 			
+			//now the left elite agents procreate with a random partner 			
 			for(int i = 2; i < children.length; i++) {
-				int r = (int) (Math.random()*elites.length);
-				children[i] = procreate(elites[r],elites[r]);
+				int r1 = (int) (Math.random()*elites.length);
+				int r2 = (int) (Math.random()*elites.length);
+				children[i] = procreate(elites[r1],elites[r2]);
 			}
 			
-			//creates a new population consisting of the elite genomes and their children
-			population = new double[50][5]; 
+			//creates a new population array consisting of the elite agents and their children
 			for(int i = 0; i < population.length/2; i++) {
 				population[i] = elites[i];
 				population[i+population.length/2] = children[i];
 			}	
+			//resets the score of each agent in the population
+			for(int i = 0; i < population.length; i++) {
+				population[i].setScore(0);
+			}
 			
-		}
-		
-		
-		
-		return fittestAgent;
+			//the 0th index is the agent with the best performance
+			fittestAgent = population[0];
+			
+			for(int i = 0; i < fittestAgent.getGenes().length;i++) {
+				System.out.println("Gene Nr:"+i+" = "+ fittestAgent.getGenes()[i]);
+			}
+		}		
 	}
-	//uniform crossover
-	public double[] procreate(double[] father, double[] mother) {
-		//returns child genes
-		double[] child = new double[father.length];
+	
+	//weighted uniform crossover
+	public DummyAgent procreate(DummyAgent father, DummyAgent mother) {
+		//new genomes are created
+		double[] childGenes = new double[genes.length];
 		
-		//chooses a gene randomly from the father or the mothers side and adds a mutationstep via the mutationrate
-		for(int i = 0; i < child.length; i++) {
-			child[i] = (father[i]+mother[i])/2;
+		//take the weighted average of each gene 		
+		double fatherWeight = father.getScore();
+		double motherWeight = mother.getScore();
+		double total = fatherWeight + motherWeight;
+		
+		for(int i = 0; i < childGenes.length; i++) {			
+			//give the crossover gene chosen randomly from the parent agents leaning to parent with a higher score			
+			childGenes[i] = (Math.random() < fatherWeight/total) ? father.getGenes()[i] : mother.getGenes()[i];
+			
+			//adds via the mutationrate a mutationstep to each gene
 			if(Math.random()<MUTATION_RATE) {
-				child[i] += child[0]*MUTATION_STEP;
+				childGenes[i] += childGenes[0]*MUTATION_STEP;
 			}
 		}
+
+		DummyAgent child = new DummyAgent(childGenes);		
 		return child;
 	}
 	

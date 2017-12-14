@@ -6,8 +6,9 @@ import GameLogic.DemoBotGame;
 import GameLogic.Direction;
 import GameLogic.PetrisGame;
 
-public class DummyAgent extends Agent{
+public class DummyAgent extends Agent implements Comparable<DummyAgent>{
 	
+	public int score;
 	
 	public DummyAgent(double[] g) {	
 		super(g);
@@ -15,7 +16,7 @@ public class DummyAgent extends Agent{
 	
 	@Override 
 	//comment
-public void makeMove(PetrisGame g) {
+	public void makeMove(PetrisGame g) {
 		
 		game = (TrainEnvironment) g;
 		
@@ -23,11 +24,23 @@ public void makeMove(PetrisGame g) {
 		
 		if(!game.gameOverCheck() && moveList.size()!=0) {
 			//moves the block to the evaluated position
-			game.getFallingBlock().setCoordinates(bestMove(game.getGrid(),moveList,true)); 	
+			game.getFallingBlock().setCoordinates(bestMove(game.getGrid(),moveList,false,game.getNextBlock().getCoordinates())); 	
 			game.move(Direction.DOWN);
 		}	
 			
 	}
 
+	@Override
+	public int compareTo(DummyAgent other) {
+		return -1*Integer.valueOf(this.score).compareTo(other.score);
+	}
+	
+	public void setScore(int s) {
+	    	score = s;
+	}
+	
+	public int getScore() {
+		return score;
+	}
 	
 }

@@ -182,7 +182,7 @@ public class PetrisGame{
             }
             return coords;
     }
-    
+
     public boolean doesCollide(int x, int y){
         if(y + 1 >= gridMatrix.length || gridMatrix[y + 1][x] != null){
             return true;
@@ -383,7 +383,7 @@ public class PetrisGame{
     	}
     }
     
-    public int[][] multiplyMatrix(int[][] matrix1, int[][] matrix2){
+    public static int[][] multiplyMatrix(int[][] matrix1, int[][] matrix2){
 		int[][] matrix = new int[matrix1.length][matrix2[0].length];
 		if (matrix1[0].length != matrix2.length){
 			System.out.println("The sum is illegal - widths or lengths of matrices don't match!");

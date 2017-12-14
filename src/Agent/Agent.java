@@ -18,29 +18,12 @@ public class Agent{
 		genes = g;
 	}
 	
-	public static void main(String[] args) {
-		double[] testGenes = {1,1,1,1,1};
-		Agent testAgent = new Agent(testGenes);
-		Color[][] testGrid = {  {null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,null,null},
-								{null,null,null,Color.BEIGE,Color.BEIGE},
-								{null,null,Color.BEIGE,null,Color.BEIGE},
-								};
-		System.out.println(testAgent.bumpiness(testGrid));
-		System.out.println(testAgent.maxHeight(testGrid));
-		System.out.println(testAgent.cumulativeHeight(testGrid));
-		System.out.println(testAgent.countHoles(testGrid));
-		System.out.println(testAgent.instantFullRows(testGrid));
+	public void setGenes(double[] g) {
+		genes = g;
+	}
+	
+	public double[] getGenes() {
+		return genes;
 	}
 	
 	//comment
@@ -52,19 +35,20 @@ public class Agent{
 		
 		if(!game.gameOverCheck() && moveList.size()!=0) {
 			//moves the block to the best evaluated grid position considering moving the next block 
-			game.getFallingBlock().setCoordinates(bestMove(game.getGrid(),moveList,false)); 	
+			int[][] nextBlock = game.getNextBlock().getCoordinates();
+			game.getFallingBlock().setCoordinates(bestMove(game.getGrid(),moveList,true, nextBlock)); 	
 		}	
 	}
 	
 	//creates an array of evaluations for each move and returns the move with the highest value
-	public int[][] bestMove(Color[][] grid,ArrayList<int[][]> moveList, boolean considerNext){
+	public int[][] bestMove(Color[][] grid,ArrayList<int[][]> moveList, boolean considerNext, int[][] nextBlock){
 				
 		double[] evaluations = new double[moveList.size()];
 		int best = 0;
 		
 		
 		for(int i = 0; i < evaluations.length; i++) {
-			evaluations[i] = (considerNext==true) ? evaluate(grid,moveList.get(i),true) : evaluate(grid,moveList.get(i),false);
+			evaluations[i] = (considerNext==true) ? evaluate(grid,moveList.get(i),true,nextBlock) : evaluate(grid,moveList.get(i),false, nextBlock);
 		}
 		
 		for(int j = 0; j < evaluations.length; j++) {
@@ -73,19 +57,18 @@ public class Agent{
 			}			
 		}
 		
-		
 		return moveList.get(best);
 	}
 	
 	//evaluate a grid position
-	public double evaluate(Color[][] grid,int[][] move, boolean considerNext) {		
+	public double evaluate(Color[][] grid,int[][] move, boolean considerNext, int[][] nextBlock) {		
 		Color[][] gridCopy = new Color[grid.length][grid[0].length];
 		double value = 0;
 		
 		//copies the grid from the game	
 		for(int l = 0; l < gridCopy.length;l++) {
 			for(int j = 0; j < gridCopy[0].length; j++) {
-				gridCopy[l][j] = game.getGrid()[l][j];
+				gridCopy[l][j] = grid[l][j];
 			}
 		}
 		
@@ -97,8 +80,8 @@ public class Agent{
          
          //finds the best move for the next block and places it on the grid copy
          if(considerNext) {
-        	 ArrayList<int[][]> nextMoveList = possibleMoves2(gridCopy, game.getNextBlock().getCoordinates());    
-        	 int[][] nextMove = bestMove(gridCopy,nextMoveList, false); //here it doesn't consider the next block, because we only have the information about one following block
+        	 ArrayList<int[][]> nextMoveList = possibleMoves2(gridCopy, nextBlock);    
+        	 int[][] nextMove = bestMove(gridCopy,nextMoveList, false, nextBlock); //here it doesn't consider the next block, because we only have the information about one following block
         	 
         	 for(int k = 0; k < move[0].length; k++){
                  gridCopy[nextMove[1][k]][nextMove[0][k]] = Color.PURPLE;				            												
@@ -194,10 +177,10 @@ public class Agent{
 	public ArrayList<int[][]> possibleMoves2(Color[][] originalGrid, int[][] fallingBlock){ // returns a list of possible places for the falling block
 		ArrayList<int[][]> moveList = new ArrayList<int[][]>();
 		//copy of the grid to check if a move is possible
-		Color[][] grid = new Color[game.getGrid().length][game.getGrid()[0].length];
+		Color[][] grid = new Color[originalGrid.length][originalGrid[0].length];
 		for(int i = 0; i < grid.length; i++) {
 			for(int j = 0; j < grid[0].length;j++) {
-				grid[i][j]=game.getGrid()[i][j];
+				grid[i][j]=originalGrid[i][j];
 			}
 		}
 		//changes the coordinates of the falling block copy, so that it would lay on top of each column in each rotation
@@ -208,13 +191,14 @@ public class Agent{
 					//then we iterate each rotation
 					for(int rota = 0; rota < 4; rota++) {
 						//copies the falling block
-						int[][] checkCoords = new int[game.getFallingBlock().getCoordinates().length][game.getFallingBlock().getCoordinates()[0].length];
+						int[][] checkCoords = new int[fallingBlock.length][fallingBlock[0].length];
 						for(int i = 0; i < checkCoords.length; i++) {
 							for(int j = 0; j < checkCoords[0].length;j++) {
-								checkCoords[i][j]=game.getFallingBlock().getCoordinates()[i][j];
+								checkCoords[i][j]=fallingBlock[i][j];
 							}
 						}
 						//rotate without smallBoardRotation
+						//checkCoords = game.rotate(checkCoords, rota*90, true); change back
 						checkCoords = game.rotate(checkCoords, rota*90, true);	
 						
 						//see getPivotPiece
