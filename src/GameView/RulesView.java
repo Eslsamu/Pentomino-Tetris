@@ -1,17 +1,17 @@
 package GameView;
 
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 public class RulesView extends GridPane{
 	
 	public RulesView() {
 		
-		setMinSize(125, 375);
+	setMinSize(175, 375);
         setGridLinesVisible(false);
-        setAlignment(Pos.TOP_LEFT);
+        setAlignment(Pos.TOP_CENTER);
         setStyle("-fx-border-color: white; -fx-border-width: 0 1 1 1; -fx-background-color: #9ac6d6; -fx-fill: #DAA520; fx-font-weight: bold;");
         Text controlsHeader = new Text("Controls");
         controlsHeader.setStyle("-fx-fill: red; -fx-font-size: 12pt");
@@ -24,6 +24,10 @@ public class RulesView extends GridPane{
         add(controls, 0, 2);
         add(rulesHeader, 0 ,3);
         add(rule, 0, 4);
+        setHalignment(controlsHeader, HPos.CENTER);
+        setHalignment(controls, HPos.CENTER);
+        setHalignment(rulesHeader, HPos.CENTER);
+        setHalignment(rule, HPos.CENTER);
 	}
 	
 }
