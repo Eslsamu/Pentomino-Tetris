@@ -24,7 +24,8 @@ public class Agent{
 		Color[][] testGrid = {  {null,null,null,null,null},
 								{null,null,null,null,null},
 								{null,null,null,null,null},
-								{null,null,null,null,null},
+								{null,null,null,null,null}
+								,
 								{null,null,null,null,null},
 								{null,null,null,null,null},
 								{null,null,null,null,null},

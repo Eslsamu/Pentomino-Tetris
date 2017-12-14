@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 
 public class DemoBotGame extends PetrisGame{
 	
-	private static double[] genomes = {1,1,10,1};
+	private static double[] genomes = {1,1,10,1,1};
     private Agent agent;
     
     public DemoBotGame() {
@@ -25,6 +25,7 @@ public class DemoBotGame extends PetrisGame{
 		System.out.println(genomes[1]);
 		System.out.println(genomes[2]);
 		System.out.println(genomes[3]);
+		System.out.println(genomes[4]);
     }
     
     public static void setDNA(double[] g) {

@@ -20,7 +20,7 @@ public class TrainEnvironment extends PetrisGame{
 	
 	private static final double MUTATION_RATE = 0.2;
 	private static final double MUTATION_STEP = 0.1;
-	private static final double GENERATIONS = 10;
+	private static final double GENERATIONS = 200;
 	
 	private DummyAgent agent;
 
@@ -31,6 +31,7 @@ public class TrainEnvironment extends PetrisGame{
 		System.out.println(genomes[1]);
 		System.out.println(genomes[2]);
 		System.out.println(genomes[3]);
+		System.out.println(genomes[4]);
 		
 		DemoBotGame.setDNA(genomes);
 	}
@@ -39,10 +40,10 @@ public class TrainEnvironment extends PetrisGame{
 	
 	public double[] evolve() {
 		//initialize a population of 50 agents
-		double[][] population = new double[50][4];
+		double[][] population = new double[50][5];
 		
 		//the genomes that had the best score after all iterations
-		double[] fittestAgent = new double[4];
+		double[] fittestAgent = new double[5];
 				
 		//assign each individual agent with random genes
 		for(int i = 0; i < population.length; i++) {
@@ -50,6 +51,7 @@ public class TrainEnvironment extends PetrisGame{
 			population[i][1] = 0.5;
 			population[i][2] = 0.5;
 			population[i][3] = 0.5;
+			population[i][4] = 0.5;
 		}
 		
 		for(int g = 0; g < GENERATIONS; g++) {
@@ -78,7 +80,7 @@ public class TrainEnvironment extends PetrisGame{
 			
 			//prints the out the performance of this generation
 			System.out.println("best: "+fitness[0].getValue());
-			System.out.println("worst: "+fitness[49].getValue());
+			System.out.println("worst: "+fitness[fitness.length-1].getValue());
 			
 			double averagePerformance = 0;
 			for(int i = 0; i < fitness.length; i++) {
@@ -88,17 +90,18 @@ public class TrainEnvironment extends PetrisGame{
 			
 			
 			//50% of the fittest genomes are stored in an array of "elites"
-			double[][] elites = new double[population.length/2][4];
+			double[][] elites = new double[population.length/2][5];
 			
 			for(int i = 0; i < elites.length; i++) {
 				elites[i][0] = population[fitness[i].getIndex()][0];
 				elites[i][1] = population[fitness[i].getIndex()][1];
 				elites[i][2] = population[fitness[i].getIndex()][2];
 				elites[i][3] = population[fitness[i].getIndex()][3];
+				elites[i][4] = population[fitness[i].getIndex()][4];
 			}
 			
 			//50% of the population get's replaced by new children
-			double[][] children = new double[population.length/2][4];
+			double[][] children = new double[population.length/2][5];
 			
 			// the two fittest genomes procreate first
 			children[0] = procreate(elites[0],elites[1]);
@@ -111,7 +114,7 @@ public class TrainEnvironment extends PetrisGame{
 			}
 			
 			//creates a new population consisting of the elite genomes and their children
-			population = new double[50][4]; 
+			population = new double[50][5]; 
 			for(int i = 0; i < population.length/2; i++) {
 				population[i] = elites[i];
 				population[i+population.length/2] = children[i];
@@ -126,7 +129,7 @@ public class TrainEnvironment extends PetrisGame{
 	
 	public double[] procreate(double[] father, double[] mother) {
 		//returns child genes
-		double[] child = new double[4];
+		double[] child = new double[5];
 		
 		//chooses a gene randomly from the father or the mothers side
 		Random ran = new Random();
@@ -134,7 +137,7 @@ public class TrainEnvironment extends PetrisGame{
 		child[1] = (ran.nextInt() % 2 == 0) ? father[1] : mother[1];
 		child[2] = (ran.nextInt() % 2 == 0) ? father[2] : mother[2];
 		child[3] = (ran.nextInt() % 2 == 0) ? father[3] : mother[3];
-		
+		child[4] = (ran.nextInt() % 2 == 0) ? father[4] : mother[4];
 		//mutates each gene via a mutationstep		
 		if(Math.random()<MUTATION_RATE) {
 			child[0] += child[0]*MUTATION_STEP;
@@ -147,6 +150,9 @@ public class TrainEnvironment extends PetrisGame{
 		}
 		if(Math.random()<MUTATION_RATE) {
 			child[3] += child[3]*MUTATION_STEP;
+		}
+		if(Math.random()<MUTATION_RATE) {
+			child[4] += child[4]*MUTATION_STEP;
 		}
 		return child;
 	}
