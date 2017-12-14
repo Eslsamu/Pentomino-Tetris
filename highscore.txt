@@ -1,10 +1,11 @@
-1: Roboter 3500
-2: Roboter 2800
-3: Roboter 2700
+1: Roboter 4500
+2: Roboter 3600
+3: Roboter 2800
 4: Roboter 2500
-5: Roboter 2500
-6: Roboter 2500
-7: Roboter 2500
-8: Roboter 2100
-9: Roboter 2100
-10: Roboter 2100
+5: Roboter 1900
+6: Roboter 1600
+7: Roboter 1400
+8: Roboter 1400
+9: Roboter 1200
+10: Roboter 1100
+

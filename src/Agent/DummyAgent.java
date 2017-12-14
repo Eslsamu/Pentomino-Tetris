@@ -19,11 +19,11 @@ public void makeMove(PetrisGame g) {
 		
 		game = (TrainEnvironment) g;
 		
-		ArrayList<int[][]> moveList = possibleMoves2();
+		ArrayList<int[][]> moveList = possibleMoves2(game.getGrid(), game.getFallingBlock().getCoordinates());
 		
 		if(!game.gameOverCheck() && moveList.size()!=0) {
 			//moves the block to the evaluated position
-			game.getFallingBlock().setCoordinates(bestMove(moveList)); 	
+			game.getFallingBlock().setCoordinates(bestMove(game.getGrid(),moveList,true)); 	
 			game.move(Direction.DOWN);
 		}	
 			
