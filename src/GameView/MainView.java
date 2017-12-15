@@ -1,7 +1,6 @@
 package GameView;
 import GameLogic.PetrisGame;
 import Setup.ScoreReader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -10,34 +9,47 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * We call the classes that create graphical interface during the game, including scores, rules, next pentomino and player name.
+ * @author Jordan, Basia, Stijn, Yvar, Sammuel, Blazej
+ */
 public class MainView extends GridPane{
     private PetrisGame game;
     
-    //TODO comment
+    /**
+     * Constructor receives an instance of PetrisGame - g and assigns it to a
+     * private variable game, which will be used in the class. We set size and gaps, we also add style sheets.
+     * When the constructor is called we call the updateMain method.
+     * @param g an instance of current running PetrisGame
+     */
     public MainView(PetrisGame g){  
     	game = g;
         updateMain();
-    	setGridLinesVisible(true);
         setMaxSize(600, 750);
         setMinSize(600, 750);
-      //here we add the left rectangle containing scores and rules
         setHgap(10);
-        
         getStylesheets().add("GameView/stylesheet.css");
     }
-    //TODO comment
+    	
+    /**
+     * This method creates an instance of GridView. We set alignment to the main GridPane
+     * remove if something is in it. Then we add scores, rules, the game graphical interface, next pentomino
+     * and player name to the GridPane.
+     */
     public void updateMain() {
     	GridView gridView = new GridView(game);
         setAlignment(Pos.CENTER);
         getChildren().clear();
-        //TODO comment
     	add(scoresAndRules(), 0, 0);
-        //middle rectangle with gameBoard
         add(gridView, 1, 0);
-        //right rectangle where nextPentomino is displayed
         add(nextPentoAndPlayerName(), 2, 0);
     }
-    
+
+    /**
+     * Create a new GridPane that will combine the NextBlockView GridPane and 
+     * the PlayerNameView and position them the way we want to.
+     * @return nextPentoAndPlayerName a Parent that contains nextBlock and playerName
+     */
     public Parent nextPentoAndPlayerName(){
         GridPane nextPentoAndPlayerName = new GridPane();
         NextBlockView nextBlock = new NextBlockView(game);
@@ -45,14 +57,18 @@ public class MainView extends GridPane{
         nextPentoAndPlayerName.setAlignment(Pos.TOP_CENTER);
         nextPentoAndPlayerName.setMaxSize(175, 750);
         nextPentoAndPlayerName.setMinSize(175, 750);
-        //adds scores on the top
         nextPentoAndPlayerName.add(nextBlock, 0, 0);
-        //adds rules on the bottom
         nextPentoAndPlayerName.add(playerName, 0, 1);
+        
         return nextPentoAndPlayerName;
     }
+    /**
+     * Does similar things to the nextPentoAndPlayerName. Create a new GridPane #
+     * that will combine the ScoreView GridPane and 
+     * the RulesView and position them the way we want to.
+     * @return scoresRule a Parent that contains score and rules
+     */
     public Parent scoresAndRules(){
-        //creates the grid for scores and rules
         GridPane scoresRule = new GridPane();
         ScoreView score = new ScoreView(game);
         RulesView rules = new RulesView();
@@ -60,13 +76,15 @@ public class MainView extends GridPane{
         scoresRule.setMaxSize(175, 750);
         scoresRule.setMinSize(175, 750);
         scoresRule.setGridLinesVisible(false);
-        //adds scores on the top
         scoresRule.add(score, 0, 0);
-        //adds rules on the bottom
         scoresRule.add(rules, 0, 1);
+        
         return scoresRule;
     }
     
+    /**
+     * If this method is called it will open a temporary stage displaying a game over menu.
+     */
     public void showGameOver() {
     	ScoreReader sr = new ScoreReader();
     	sr.updateFile(game.getScore(), game.getPlayerName());
@@ -87,5 +105,4 @@ public class MainView extends GridPane{
 	      
 	    temporaryStage.show();
     }
-    
 }

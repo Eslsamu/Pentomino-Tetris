@@ -30,15 +30,15 @@ public class PetrisGame{
     /**
      * Level at the beginning of the game.
      */
-    private int level = 1;
+    protected int level = 1;
     /**
      * Score at the beginning of the game.
      */
-    private int score = 0;
+    protected int score = 0;
     /**
      * Number of rows that were cleared during current game.
      */
-    private int rowsCleared = 0;
+    protected int rowsCleared = 0;
     /**
      * Describes how fast should the block fall at a certain level.
      */
@@ -343,8 +343,8 @@ public class PetrisGame{
             for(int i = 0; i < whereToPlace[0].length; i++){
                 gridMatrix[whereToPlace[1][i]][whereToPlace[0][i]] = colorIndex;
             }
-            gameOverCheck();
-            if(isRunning) {
+            clearRows();          
+            if(!gameOverCheck()) {
             	spawn();
             }
     }

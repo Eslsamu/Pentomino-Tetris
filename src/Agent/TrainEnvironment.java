@@ -1,7 +1,5 @@
 package Agent;
 
-
-
 import java.util.Arrays;
 
 import GameLogic.DemoBotGame;
@@ -79,6 +77,7 @@ public class TrainEnvironment extends PetrisGame{
 	}
 	
 	
+
 	/**
 	 * Essentially generates a population of random agents that will
 	 * iteratively selected to recombine to optimize the score that 
@@ -204,7 +203,7 @@ public class TrainEnvironment extends PetrisGame{
 		gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
-        
+        System.out.println("setup training");
 	}
 	
 	/**
@@ -216,6 +215,8 @@ public class TrainEnvironment extends PetrisGame{
 		fallingBlock = nextBlock;
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
+        
+        agent.makeMove(this);
 	}
 	
 	/**
@@ -234,6 +235,7 @@ public class TrainEnvironment extends PetrisGame{
         }
 	}
 
+
 	/**
 	 * Again only the absence of the isRunning variable makes the difference.
 	 * And no GameOver statement is printed.
@@ -242,8 +244,7 @@ public class TrainEnvironment extends PetrisGame{
 	 public boolean gameOverCheck() {
         int[][] coordinates = nextBlock.getCoordinates();
         for (int i = 0; i < coordinates[0].length; i++){
-           if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {
-    		System.out.println("GameOver"); 
+           if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {       	
             return true;
             }              
     	} 

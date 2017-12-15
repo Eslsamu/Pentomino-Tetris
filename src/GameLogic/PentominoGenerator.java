@@ -3,9 +3,23 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
+/**
+ * Class which provides the information needed to construct the pentominoes, and the methods
+ * which use the Pentomino class and this information to create any one of the 12 pentominoes randomly.
+ *
+ */
 
 public class PentominoGenerator {
-   private ArrayList<int[][]> pentominoList; 
+   private ArrayList<int[][]> pentominoList;
+   
+    /**
+     * The constructor represents the pentomino coordinates using an arraylist of 2D matrices,
+     * each entry in the arraylist being the coordinates of 1 of the 12 pentominoes.
+     * The coordinates are represented as 2 by 5 matrices, the first row containing the 5 x coordinates
+     * and the second row containing the 5 y coordinates. The coordinates are relative to the square (0,0).
+     *
+     */
+	
 	public PentominoGenerator(){
 		//X/Y coordinates of the pieces of the 12 pentomino shapes
 		pentominoList = new ArrayList<int[][]>();
@@ -34,7 +48,14 @@ public class PentominoGenerator {
                 int[][] Y = {{2,3,2,2,2},{0,1,1,2,3}}; //11
                 pentominoList.add(Y);
 	}
-	
+    /**
+     * Method which first creates a random integer between 0 and 11, used to randomly select 1 of the pentominoes from the arraylist.
+     * The method then selects a random color by creating random integers between 0 and 255, using red green blue values.
+     * We also make sure the color does not happen to be the same as the background color rgb(186,216,227) because then we couldn't see
+     * The pentomino on the board.
+     * @return returns the Pentomino object which we just constructed
+     */
+        
 	public Pentomino getRandomPentomino(){
             int index = (int) (Math.random()*12);
             //exclude background color
@@ -48,7 +69,11 @@ public class PentominoGenerator {
                 
             return random;
 	}
-
+    /**
+     * Method for testing purposes, allowing us to pick a pentomino as the next falling piece ourselves.
+     * @param index representing the pentominoe we want to get
+     * @return specific pentominoe accessed with index
+     */
 	public Pentomino getTestPentomino(int index){
             Color ranColor;
             do{
