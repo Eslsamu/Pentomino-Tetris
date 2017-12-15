@@ -31,18 +31,18 @@ public class TrainEnvironment extends PetrisGame{
 	/**
 	 * The amount of iterations a population gets evolved.
 	 */
-	private static final double GENERATIONS = 10;
+	private static final double GENERATIONS = 30;
 	/**
 	 * The amount of games a single agent is playing in 
 	 * a generation. Increasing results to the training 
 	 * taking more time, but the fitness evaluation becoming
 	 * less random.
 	 */
-	private static final int GAME_ITERATIONS = 5;
+	private static final int GAME_ITERATIONS = 10;
 	/**
 	 * The amount of agents in a population.
 	 */
-	private static final int POPULATION_SIZE = 50;
+	private static final int POPULATION_SIZE = 100;
 	/**
 	 * The percentage of fit individuals that get selected inside a population
 	 * based on their fitness level and that will recombine.

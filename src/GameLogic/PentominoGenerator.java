@@ -23,30 +23,30 @@ public class PentominoGenerator {
 	public PentominoGenerator(){
 		//X/Y coordinates of the pieces of the 12 pentomino shapes
 		pentominoList = new ArrayList<int[][]>();
-                int [][] L = {{0,1,2,3,0},{0,0,0,0,1}}; //0
-                pentominoList.add(L);
-                int[][] I = {{0,1,2,3,4},{0,0,0,0,0}}; //1
-                pentominoList.add(I);
-                int[][] U = {{2,3,2,2,3},{0,0,1,2,2}}; //2
-                pentominoList.add(U); 
-                int[][] Z = {{1,2,2,2,3},{2,0,1,2,0}}; //3
-                pentominoList.add(Z);
-                int[][] X = {{2,1,2,3,2},{0,1,1,1,2}}; //4
-                pentominoList.add(X);
-                int[][] T = {{1,2,3,2,2},{0,0,0,1,2}}; //5
-                pentominoList.add(T);
-                int[][] V = {{2,2,2,3,4},{0,1,2,2,2}}; //6
-                pentominoList.add(V);
-                int[][] N = {{2,2,3,3,3},{0,1,1,2,3}}; //7
-                pentominoList.add(N);
-                int[][] F = {{2,3,1,2,2},{0,0,1,1,2}}; //8
-                pentominoList.add(F); 
-                int[][] W = {{2,2,3,3,4},{0,1,1,2,2}}; //9
-                pentominoList.add(W);
-                int[][] P = {{2,3,4,3,4},{0,0,0,1,1}}; //10
-                pentominoList.add(P);
-                int[][] Y = {{2,3,2,2,2},{0,1,1,2,3}}; //11
-                pentominoList.add(Y);
+			int [][] L = {{0,1,2,3,3},{2,2,2,2,3}};
+	        pentominoList.add(L);
+	        int[][] I = {{0,1,2,3,4},{2,2,2,2,2}};
+	        pentominoList.add(I);
+	        int[][] U = {{2,3,2,2,3},{0,0,1,2,2}};
+	        pentominoList.add(U);
+	        int[][] Z = {{1,2,2,2,3},{0,0,1,2,2}};
+	        pentominoList.add(Z);
+	        int[][] X = {{2,1,2,3,2},{0,1,1,1,2}};
+	        pentominoList.add(X);
+	        int[][] T = {{1,2,3,2,2},{0,0,0,1,2}};
+	        pentominoList.add(T);
+	        int[][] V = {{2,2,2,3,4},{0,1,2,2,2}};
+	        pentominoList.add(V);
+	        int[][] N = {{1,2,2,3,4},{0,0,1,1,1}};
+	        pentominoList.add(N);
+	        int[][] F = {{2,3,1,2,2},{0,0,1,1,2}};
+	        pentominoList.add(F);
+	        int[][] W = {{2,2,3,3,4},{0,1,1,2,2}};
+	        pentominoList.add(W);
+	        int[][] P = {{2,3,4,3,4},{0,0,0,1,1}};
+	        pentominoList.add(P);
+	        int[][] Y = {{2,1,2,2,2},{0,1,1,2,3}};
+	        pentominoList.add(Y);
 	}
     /**
      * Method which first creates a random integer between 0 and 11, used to randomly select 1 of the pentominoes from the arraylist.

@@ -7,7 +7,8 @@ import GameLogic.Direction;
 import GameLogic.PetrisGame;
 
 /**
- * 
+ * A subclass of the Agent class, which implements the Comparable interface so that an array
+ * of DummyAgents can be sorted by it's achieved score.
  * @author Samuel
  *
  */
@@ -19,8 +20,11 @@ public class DummyAgent extends Agent implements Comparable<DummyAgent>{
 		super(g);
 	}
 	
+	/**
+	 * Works the same way as the makeMove method in Agent, but also moves the falling block down after placing it.
+	 * This causes it to collide, which spawns a new falling block. 
+	 */
 	@Override 
-	//comment
 	public void makeMove(PetrisGame g) {
 		
 		game = (TrainEnvironment) g;

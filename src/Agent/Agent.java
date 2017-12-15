@@ -9,24 +9,29 @@ import GameLogic.PetrisGame;
 import javafx.scene.paint.Color;
 
 public class Agent{
-	
+	/**
+	 * An instance of the game on which the agent should perform a move.
+	 * Is updated for each move.
+	 */
 	protected PetrisGame game;
-	
+	/**
+	 * The genes represent weights for each parameter in the evaluation of the grid.
+	 */
 	protected double[] genes;
-	
+	/**
+	 * 
+	 * @param g genes
+	 */
 	public Agent(double[] g) {
 		genes = g;
 	}
 	
-	public void setGenes(double[] g) {
-		genes = g;
-	}
 	
-	public double[] getGenes() {
-		return genes;
-	}
-	
-	//comment
+	/**
+	 * First it gathers a list of possible moves, then checks if it is still possible to perform a move.
+	 * If this is the case, it sets the coordinates of the falling block to the best evaluated position.
+	 * @param g updated the agent on the current state of the game
+	 */
 	public void makeMove(PetrisGame g) {
 		
 		game = (DemoBotGame) g;
@@ -40,7 +45,14 @@ public class Agent{
 		}	
 	}
 	
-	//creates an array of evaluations for each move and returns the move with the highest value
+	/**
+	 * 
+	 * @param grid Doesn't get the grid from the game, but takes it as a parameter. Can be used for test grids.
+	 * @param MoveList evaluates the list of possible moves
+	 * @param considerNext Can be set to true to also evalute considering the best position for the next block.
+	 * @param nextBlock
+	 * @return The coordinates for the move with the highest evaluated score.
+	 */
 	public int[][] bestMove(Color[][] grid,ArrayList<int[][]> moveList, boolean considerNext, int[][] nextBlock){
 				
 		double[] evaluations = new double[moveList.size()];
@@ -60,7 +72,11 @@ public class Agent{
 		return moveList.get(best);
 	}
 	
-	//evaluate a grid position
+	/**
+	 * Creates a copy of the current grid and places the block for a specified move on it.
+	 * Then evaluates this grid based on the maximum height, the cumulative height ....
+	 * @return A double value
+	 */
 	public double evaluate(Color[][] grid,int[][] move, boolean considerNext, int[][] nextBlock) {		
 		Color[][] gridCopy = new Color[grid.length][grid[0].length];
 		double value = 0;
@@ -90,7 +106,7 @@ public class Agent{
          
          value -= genes[0]*maxHeight(gridCopy);
          value -= genes[1]*cumulativeHeight(gridCopy);
-         value += genes[2]*instantFullRows(gridCopy);
+         value += genes[2]*instantFullRows(gridCopy)*instantFullRows(gridCopy);//more score for more rows at one time
          value -= genes[3]*countHoles(gridCopy);
          value -= genes[4]*bumpiness(gridCopy);
          //TODO       
@@ -98,7 +114,10 @@ public class Agent{
 	  }
 	  
 	
-	
+	  /**
+	   *  
+	   * @return An amount of "holes" and their size, empty cells with a filled cell above them. 
+	   */
 	  public int countHoles(Color[][] grid){
 	      int holes = 0;
 	      for(int col = 0; col < grid[0].length; col++) {
@@ -127,7 +146,10 @@ public class Agent{
 	      }
 	    return holes;    
 	  }
-	
+	/**
+	 * 
+	 * @return the amount of full rows on that grid position.(Doesn't consider rows that will be filled after row clearing)
+	 */
 	public int instantFullRows(Color[][] grid) {	
 		int fulls = 0;
 		for(int row = 0; row < grid.length; row++) {
@@ -143,7 +165,10 @@ public class Agent{
 		}
 		return fulls;
 	}
-	
+	/**
+	 * 
+	 * @return A double value that represents the cumulated amount of the highest filled cell in a column divided by the total number of columns.
+	 */
 	public double cumulativeHeight(Color[][] grid) {
 		double total = 0;
 		for(int col = 0; col < grid[0].length; col++) {
@@ -151,7 +176,10 @@ public class Agent{
 		}
 		return total/grid[0].length;
 	}
-	
+	/**
+	 * 
+	 * @return the int height of the highest column 
+	 */
 	public int maxHeight(Color[][] grid) { //TODO Bug in here probably		
 		int max = 0;
 		for(int col = 0; col < grid[0].length; col++) {
@@ -162,7 +190,10 @@ public class Agent{
 		return max;
 	}
 	
-	//returns the level of bumpiness -> difference between two neighboring columnheights
+	/**
+	 * To avoid wells in the grid.
+	 * @return The cumulated height difference of each column with its neighbor columns.
+	 */
 	public int bumpiness(Color[][] grid) {
 		int bumpiness = 0;
 		for(int col = 0; col < grid[0].length-1; col++) { //-1 because we do not want to count the last col
@@ -173,7 +204,11 @@ public class Agent{
 		return bumpiness;
 	}
 	
-	//secondMethod of listing possible moves
+	/**
+	 * Places the falling block on the grid by moving it downwards from each X position until it hits a surface.
+	 * Also considers all possible rotations. Then adds a move to a list.
+	 * @return an arraylist of possible moves
+	 */
 	public ArrayList<int[][]> possibleMoves2(Color[][] originalGrid, int[][] fallingBlock){ // returns a list of possible places for the falling block
 		ArrayList<int[][]> moveList = new ArrayList<int[][]>();
 		//copy of the grid to check if a move is possible
@@ -294,5 +329,16 @@ public class Agent{
 		}
 		
 		return false;
+	}
+	/**
+	 * Is used in TrainEnvironment to give a crossover new individual genes.
+	 * @param g
+	 */
+	public void setGenes(double[] g) {
+		genes = g;
+	}
+	
+	public double[] getGenes() {
+		return genes;
 	}
 }

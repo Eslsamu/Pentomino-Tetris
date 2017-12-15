@@ -4,7 +4,7 @@
 4: Roboter 3200
 5: Roboter 3100
 6: Roboter 2800
-7: Roboter 2500
-8: Roboter 2400
-9: Roboter 2300
-10: Roboter 2200
+7: Roboter 2700
+8: Roboter 2500
+9: Roboter 2400
+10: Roboter 2300
