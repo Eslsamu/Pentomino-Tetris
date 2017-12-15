@@ -17,8 +17,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * This class creates the starting menu with options to start the game, go to presentation menu, see high scores and exit.
+ * @author Jordan, Basia, Stijn, Yvar, Sammuel, Blazej
+ */
 public class MenuView extends GridPane{
 	
+        /**
+         * Constructor creates the menu with buttons: play, presentation menu, high score, exit.
+         */
 	public MenuView() {
 		
             Button start = new Button("Play");
@@ -29,7 +36,7 @@ public class MenuView extends GridPane{
 	    presentation.setMinSize(150, 50);
 	    presentation.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
 	    
-	    Button highscore = new Button("Highscore");
+	    Button highscore = new Button("High scores");
 	    highscore.setMinSize(150, 50);
 	    highscore.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
 	    
@@ -44,45 +51,56 @@ public class MenuView extends GridPane{
 	    setVgap(10);
 	   
 	    start.setOnAction(new EventHandler<ActionEvent>(){
-	         @Override public void handle(ActionEvent e) {
+	        @Override
+                /**
+                * If button is clicked it open a window PlayerNameView that asks for player's name before starting the game. 
+                * @param e ActionEvent, if the button is clicked it will trigger the code
+                */
+                public void handle(ActionEvent e) {
 	        	 
                     PlayerNameView pvn = new PlayerNameView(); 
                     Scene scene = new Scene(pvn);
-	        	 
-	        	//use the Stage from main class
-	             Stage primaryStage = Main.getStage();
+	        	
+	            Stage primaryStage = Main.getStage();
 	             
-	             //change Scene to scene from GameCycle
-	             primaryStage.setScene(scene);
-	             primaryStage.setWidth(300);
-	             primaryStage.setHeight(200);
+	            primaryStage.setScene(scene);
+	            primaryStage.setWidth(300);
+	            primaryStage.setHeight(200);
 	             
-	             //this following code places the Window in the centre
-	             Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-	             primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-	             primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+	            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+	            primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+	            primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
 	         }
 	    });
 	    presentation.setOnAction(new EventHandler<ActionEvent>(){
-	         @Override public void handle(ActionEvent e) {
+                @Override
+                /**
+                * If button is clicked it will open DemoMenuView
+                * @param e ActionEvent, if the button is clicked it will trigger the code
+                */
+                public void handle(ActionEvent e) {
                     DemoMenuView demo = new DemoMenuView();
                     Scene scene = new Scene(demo);
 	        	 
-	            //use the Stage from main class
 	            Stage primaryStage = Main.getStage();
 	            primaryStage.setScene(scene);
 	            primaryStage.setWidth(400);
 	            primaryStage.setHeight(400);
-	            //this following code places the Window in the centre
+                    
 	            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
 	            primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
 	            primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
 	         }
 	    });
 	    highscore.setOnAction(new EventHandler<ActionEvent>() {
-	         @Override public void handle(ActionEvent e) {
-	        	HighscoreView score = new HighscoreView();
-	        	Scene scene = new Scene(score);
+	        @Override
+                /**
+                * If button is clicked it will open HighscoreView. 
+                * @param e ActionEvent, if the button is clicked it will trigger the code
+                */
+                public void handle(ActionEvent e) {
+                    HighscoreView score = new HighscoreView();
+	       	    Scene scene = new Scene(score);
 	        	
 	            Stage primaryStage = Main.getStage();
 	            
@@ -97,7 +115,12 @@ public class MenuView extends GridPane{
 	         }
 	    });
 	    exit.setOnAction(new EventHandler<ActionEvent>(){
-	         @Override public void handle(ActionEvent e) {
+	        @Override
+                /**
+                * If button is clicked it will stop code execution and exit.
+                * @param e ActionEvent, if the button is clicked it will trigger the code
+                */
+                public void handle(ActionEvent e) {
 	            Stage primaryStage = Main.getStage();
 	            primaryStage.close();
 	            System.exit(0);
