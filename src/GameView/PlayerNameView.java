@@ -8,11 +8,23 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Creates a window where user will type in his name.
+ * 
+ * @author sam, błażej, jordan, yvar stijn, basia
+ */
 public class PlayerNameView extends GridPane{
 	
 	PetrisGame game;
         
+        /**
+         * Creates label current player, a field where player types in his name
+         * and label that is displayed when the game is paused.
+         * Sets style and place of the labels.
+         * @param g a PetrisGame is a game that will be played.
+         */
 	public PlayerNameView(PetrisGame g) {
+           
             game = g;
 
             getChildren().clear();
@@ -31,6 +43,7 @@ public class PlayerNameView extends GridPane{
             name.setFont(new Font("Arial", 16));
             add(name, 0, 1);
             setHalignment(name, HPos.CENTER);
+            
             if(!game.getIsRunning() && !game.gameOverCheck()){
                 Label gameIsPaused = new Label("Game is paused!");
                 gameIsPaused.setFont(new Font("Arial", 20));

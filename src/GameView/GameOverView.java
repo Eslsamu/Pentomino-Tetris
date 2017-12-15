@@ -21,15 +21,26 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * Creates a menu which will be displayed after the game is lost. 
+ * 
+ * @author sam, błażej, jordan, yvar stijn, basia
+ */
 public class GameOverView extends GridPane{
 	
 	private Stage temporaryStage;
 	private PetrisGame game;
 	
+        /**
+         * Constructs game over menu. Creates a label that shows the user that he lost the game
+         * and three buttons, makes event for each of the buttons after they are clicked. 
+         * It sets background, place and size of elements. 
+         * @param g a PetrisGame is a game that was just lost.
+         * @param temp a stage that we can see in front of the game board.
+         */
 	public GameOverView(PetrisGame g, Stage temp) {
-		temporaryStage = temp;
-		game = g;
-	    //Stage temporaryStage = new Stage();
+            temporaryStage = temp;
+            game = g;
 	    
 	    Label gameLost = new Label("Sorry, but you lost!");
 	    gameLost.setFont(new Font("Arial", 25));
@@ -95,7 +106,5 @@ public class GameOverView extends GridPane{
 	    add(exit, 0, 3);
 	    
 	    setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, Insets.EMPTY)));
-	    
-	    
-	}
+        }
 }
