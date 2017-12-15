@@ -1,11 +1,11 @@
 package Agent;
 
 
+
 import java.util.Arrays;
 
 import GameLogic.DemoBotGame;
 import GameLogic.Direction;
-import GameLogic.Pentomino;
 import GameLogic.PentominoGenerator;
 import GameLogic.PetrisGame;
 
@@ -71,6 +71,7 @@ public class TrainEnvironment extends PetrisGame{
 	 */
 	public TrainEnvironment() {
 		super();
+
 		genes = DemoBotGame.getDNA();
 		evolve();
 		
@@ -203,7 +204,7 @@ public class TrainEnvironment extends PetrisGame{
 		gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
-        System.out.println("setup training");
+        
 	}
 	
 	/**
@@ -215,8 +216,6 @@ public class TrainEnvironment extends PetrisGame{
 		fallingBlock = nextBlock;
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
-        
-        agent.makeMove(this);
 	}
 	
 	/**
@@ -234,6 +233,7 @@ public class TrainEnvironment extends PetrisGame{
             fallingBlock.setCoordinates(changeCoords);
         }
 	}
+
 	/**
 	 * Again only the absence of the isRunning variable makes the difference.
 	 * And no GameOver statement is printed.
@@ -242,7 +242,8 @@ public class TrainEnvironment extends PetrisGame{
 	 public boolean gameOverCheck() {
         int[][] coordinates = nextBlock.getCoordinates();
         for (int i = 0; i < coordinates[0].length; i++){
-           if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {       	
+           if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {
+    		System.out.println("GameOver"); 
             return true;
             }              
     	} 

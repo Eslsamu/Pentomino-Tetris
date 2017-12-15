@@ -26,18 +26,22 @@ public class PlayerNameView extends GridPane{
 	
 	public PlayerNameView() {
 				
-		Label enter = new Label("Enter name:");
+	Label enter = new Label("Enter name:");
         enter.setFont(new Font("Arial", 18));
         TextField name = new TextField();
         name.setPrefColumnCount(10);
         Button submit = new Button("Start game");
         submit.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
         
+        Label warning = new Label();
+        warning.setFont(new Font("Arial", 12));
+        warning.setTextFill(Color.RED);
         
         setVgap(10);
         add(enter, 0, 0);
         add(name, 0, 1);
         add(submit, 0, 2);
+        
         setAlignment(Pos.CENTER);
         setHalignment(enter, HPos.CENTER);
         setHalignment(submit, HPos.CENTER);
@@ -46,7 +50,21 @@ public class PlayerNameView extends GridPane{
           @Override
           public void handle(ActionEvent e) {
                 playerName = (String) name.getText();
-                if(playerName.length() != 0){
+                if(playerName.length() == 0){
+                    warning.setText("In order to play you should enter a name!");
+                    getChildren().remove(submit);
+                    getChildren().remove(warning);
+                    add(warning, 0, 2);
+                    add(submit, 0, 3);
+                }
+                else if(playerName.split("\\s+").length != 1){   
+                    warning.setText("PLayer names should be one word!");
+                    getChildren().remove(submit);
+                    getChildren().remove(warning);
+                    add(warning, 0, 2);
+                    add(submit, 0, 3);
+                }
+                else{
                     //use the Stage from main class
                     Stage primaryStage = Main.getStage();
                     //create an instance of BackendGrid and use it in GameCycle
@@ -55,7 +73,7 @@ public class PlayerNameView extends GridPane{
                     game.runGame();
                     //change Scene to scene from GameCycle
                     primaryStage.setScene(game.getScene());
-                    primaryStage.setWidth(700);
+                    primaryStage.setWidth(650);
                     primaryStage.setHeight(800);
                     //this following code places the Window in the centre
                     Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();

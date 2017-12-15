@@ -17,7 +17,7 @@ public class GameCycle{
 	
     //two timelines, one updates the game every 60ms, the other drops pento down starting from 500ms
     protected Timeline update;
-    protected Timeline ticker;
+    protected Timeline gameCycle;
     
     protected PetrisGame game;
     protected MainView gui;
@@ -35,7 +35,7 @@ public class GameCycle{
         if(game.gameOverCheck()){
             //if game is lost stop Timeline and updated board for one last time
             update.stop();
-            ticker.stop();
+            gameCycle.stop();
             
             gui = game.getView();
             gui.showGameOver();      
@@ -44,9 +44,10 @@ public class GameCycle{
     }
     
     public void pause() {
-    		update.pause();
-    		ticker.pause();
-            game.setIsRunning(false);   		
+        update.pause();
+        gameCycle.pause();
+        game.setIsRunning(false);
+        gui.updateMain();        
     }
     
     
@@ -69,26 +70,26 @@ public class GameCycle{
             update.setCycleCount(Timeline.INDEFINITE);
             update.play();
        
-        ticker = new Timeline(new KeyFrame(
+        gameCycle = new Timeline(new KeyFrame(
             Duration.millis(game.getSpeed()),
             ae -> playGame()));
-            ticker.setCycleCount(Timeline.INDEFINITE);
-            ticker.play();
+            gameCycle.setCycleCount(Timeline.INDEFINITE);
+            gameCycle.play();
     }
     
     public void playGame(){
-        //this method is used in the timer timeline, it basically creates a new timeline each time it is called
+        //this method is used in the gameCycle timeline, it basically creates a new timeline each time it is called
         //this is needed so that the speed is updated
-    	
         //first stop the timeline
-        ticker.stop();
+        gameCycle.stop();
         //create a new one
-        game.move(Direction.DOWN);       
-        ticker = new Timeline(new KeyFrame(
+        game.move(Direction.DOWN);
+        
+        gameCycle = new Timeline(new KeyFrame(
             Duration.millis(game.getSpeed()),
             ae -> playGame()));
         //start it
-        ticker.play();
+        gameCycle.play();
     }
     
     public Timeline getUpdate(){
@@ -96,6 +97,6 @@ public class GameCycle{
     }
     
     public Timeline getGameCycle(){
-        return ticker;
+        return gameCycle;
     }
 }

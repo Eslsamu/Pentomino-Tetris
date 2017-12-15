@@ -1,6 +1,6 @@
 package Agent;
 
-import java.util.ArrayList;
+public class DummyAgent {
 
 import GameLogic.Direction;
 import GameLogic.PetrisGame;
@@ -46,5 +46,5 @@ public class DummyAgent extends Agent implements Comparable<DummyAgent>{
 	public int getScore() {
 		return score;
 	}
-	
+
 }

@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 
 public class DemoBotGame extends PetrisGame{
 	
+
 	private static double[] genes = {2,1,20,0.2,0.2};
     private Agent agent;
     
@@ -51,18 +52,6 @@ public class DemoBotGame extends PetrisGame{
     public Scene getScene() {
     	Scene scene = new Scene(view);
     	return scene;
-    }
-    @Override
-    public boolean gameOverCheck() {
-        int[][] coordinates = nextBlock.getCoordinates();
-        for (int i = 0; i < coordinates[0].length; i++){
-           if(gridMatrix[coordinates[1][i]][coordinates[0][i]] != null) {
-    		System.out.println("GameOver"); 
-    		isRunning = false;
-            return true;
-            }              
-    	} 
-        return false;
     }
     
 	public Agent getAgent() {

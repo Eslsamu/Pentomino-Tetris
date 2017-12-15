@@ -1,7 +1,6 @@
 package GameLogic;
 import java.util.ArrayList;
 
-import Agent.Agent;
 
 import Dynamics.Controlls;
 import Dynamics.GameCycle;
@@ -12,53 +11,110 @@ import javafx.scene.paint.Color;
 
 
 public class PetrisGame{
-	//comments
-	private String playerName;
-	//comments
+    /**
+     * A name that player input at the beginning of the game and will be shown in highscore table.
+     */
+    protected String playerName;
+    /**
+     * Height of the GUI grid.
+     */
     protected final int HEIGHT = 15;
+    /**
+     * Width of the GUI grid.
+     */
     protected final int WIDTH = 5;
-    protected double INITIAL_DELAY = 500; 
-  //comments
-    protected int level = 1;
-    protected int score = 0;
-    protected int rowsCleared = 0;
+    /**
+     * Indicates how fast should the block initially fall.
+     */
+    protected double INITIAL_DELAY = 500;
+    /**
+     * Level at the beginning of the game.
+     */
+    private int level = 1;
+    /**
+     * Score at the beginning of the game.
+     */
+    private int score = 0;
+    /**
+     * Number of rows that were cleared during current game.
+     */
+    private int rowsCleared = 0;
+    /**
+     * Describes how fast should the block fall at a certain level.
+     */
     protected double delay = INITIAL_DELAY;
+    /**
+     * Rate describing how much the speed of a falling block increase in each following level.
+     */
     protected double speedIncrease = 0.8;
-  //comments
+
+    /**
+     * States if the game is running.
+     */
     protected boolean isRunning = false; //+ get&setters
-    
-    //initializes the GameGUI, ...
+
+    /**
+     * Whole game view.
+     */
     protected MainView view;
-    protected GameCycle cycle;    
+    /**
+     * Cycle of the game.
+     */
+    protected GameCycle cycle;
+    /**
+     * Controls which allow user to interact.
+     */
     protected Controlls controlls;
-    
-    
-    //comments
+
+
+    /**
+     *  Grid showed in GUI.
+     */
     protected Color[][] gridMatrix;
+    /**
+     * Pentomino block which is currently falling down the grid.
+     */
     protected Pentomino fallingBlock;
+    /**
+     * Block that will start falling after fallingBlock will stop moving.
+     */
     protected Pentomino nextBlock;
-	
+
+    /**
+     * Starts the game
+     */
     public PetrisGame() {
     	setupGame();
     }
-    
+
+    /**
+     * Starts the game after user input his name.
+     * @param name name of the user currently playing the game
+     */
     public PetrisGame(String name){
     	playerName = name;   	
         setupGame();
     }
-    
-    public void setupGame() {
-    	gridMatrix = new Color[HEIGHT][WIDTH];
-    	PentominoGenerator startGenerator = new PentominoGenerator();
+
+    /**
+     * Sets up the game.
+     */
+    public void setupGame() { 
+    	  gridMatrix = new Color[HEIGHT][WIDTH];
+    	  PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
         
         view = new MainView(this);
-    	cycle = new GameCycle(this);
+    	  cycle = new GameCycle(this);
         controlls = new Controlls(this);
         
-        isRunning = true;  
+       isRunning = true;  
     }
-    
+
+    /**
+     * Checks if the game is over.
+     * @return describes if the game is over or not
+     */
     public boolean gameOverCheck() {
         int[][] coordinates = nextBlock.getCoordinates();
         for (int i = 0; i < coordinates[0].length; i++){
@@ -70,7 +126,10 @@ public class PetrisGame{
     	} 
         return false;
     }
-    
+
+    /**
+     * Spawns next block on the grid.
+     */
     public void spawn() {
     	if(!isRunning) {
     		return;
@@ -79,11 +138,17 @@ public class PetrisGame{
     	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();         
     }
-    
+
+    /**
+     * Updates the view.
+     */
     public void updateView() {
     	view.updateMain();
     }
-    
+
+    /**
+     * Restarts the game.
+     */
     public void restart() {
     	level = 1;
     	score = 0;
@@ -95,42 +160,61 @@ public class PetrisGame{
         isRunning = true;
         spawn();
     }
-    
-    public void move(Direction aDirection){
-        if(!doesCollide(aDirection)&&isRunning) {
-            int[][] changeCoords = fallingBlock.getCoordinates();
-            switch(aDirection) {
-        	case DOWN:  {       		
-                for(int i = 0; i < changeCoords[1].length; i++){
-                    changeCoords[1][i]++;
-                }
-        		break;
-        	}	
-        	case RIGHT: {
-            	for(int i = 0; i < changeCoords[0].length; i++){
-                	changeCoords[0][i]++;
-            	}
-            	break;
-        	}        	
-        	case LEFT: {
-        		for(int i = 0; i < changeCoords[0].length; i++){
-        			changeCoords[0][i]--;
-        		}
-        		break;
-        	}
-        	case CLOCKWISE: {
-        		changeCoords = rotate(changeCoords, 90,true); //board is swapped around, so 90 instead of 270 
-                        break;
-        	}   
-        	case COUNTERCLOCKWISE: {
-        		 changeCoords = rotate(changeCoords, 270,true); 
-                         break; 
-        	}                    
-            }
-            fallingBlock.setCoordinates(changeCoords);
-        }
-    }    
 
+    /**
+     * Moves the falling block.
+     * @param aDirection a direction in which the block is moved
+     */
+    public void move(Direction aDirection){
+        if(aDirection == Direction.DROPDOWN){
+            while(!doesCollide(Direction.DOWN)){
+                move(Direction.DOWN);
+            }
+        }
+        else{
+            if(!doesCollide(aDirection)&&isRunning) {
+                int[][] changeCoords = fallingBlock.getCoordinates();
+                switch(aDirection) {
+                    case DOWN:  {       		
+                    for(int i = 0; i < changeCoords[1].length; i++){
+                        changeCoords[1][i]++;
+                    }
+                            break;
+                    }	
+                    case RIGHT: {
+                    for(int i = 0; i < changeCoords[0].length; i++){
+                            changeCoords[0][i]++;
+                    }
+                    break;
+                    }        	
+                    case LEFT: {
+                            for(int i = 0; i < changeCoords[0].length; i++){
+                                    changeCoords[0][i]--;
+                            }
+                            break;
+                    }
+                    case CLOCKWISE: {
+                            changeCoords = rotate(changeCoords, 90,true); //board is swapped around, so 90 instead of 270 
+                            break;
+                    }   
+                    case COUNTERCLOCKWISE: {
+                             changeCoords = rotate(changeCoords, 270,true); 
+                             break; 
+                    }
+                }    
+            fallingBlock.setCoordinates(changeCoords);
+            }
+        }
+    }
+
+    /**
+     * Rotates the block clockwise or counter-clockwise.
+     * @param coords Coordinates of the pentomino
+     * @param degrees Degrees determine whether the block is rotated clockwise (90 degrees) or counter-clockwise (270 degrees)
+     * @param smallBoardRotation If a block is out of the board after rotating it, it will be returned to the board.
+    Usually games do it and it makes the game easier to play, because the board is small.
+     * @return a rotated block
+     */
     public int[][] rotate(int[][] coords, double degrees, boolean smallBoardRotation){//smallBoardRotation is a feature to rotate the block even if it would hit a wall in that position
             int rotationPoint = coords[0].length / 2;
             int reducedAmountX = coords[0][rotationPoint];
@@ -151,11 +235,7 @@ public class PetrisGame{
               coords[0][i] += reducedAmountX;
               coords[1][i] += reducedAmountY;
             }
-            /* following code until return is something additionally added
-                if your pentomino is out of the board after rotating it, it will return it to the board
-                the usual games do this and is easier to play, because the board is small and for almost all pentos
-                the rotation works if they are in column 2
-            */
+
             if(smallBoardRotation) {
             	for(int i = 0; i < coords[0].length; i++){
                 	while(coords[0][i] >= gridMatrix[0].length){
@@ -183,13 +263,25 @@ public class PetrisGame{
             return coords;
     }
 
+
+    /**
+     * Checks if a square would collide if moved in a certain direction. Used for flood fill algorithm.
+     * @param x x-coordinate of the square
+     * @param y y-coordinate of the square
+     * @return shows if the square collides or not
+     */
     public boolean doesCollide(int x, int y){
         if(y + 1 >= gridMatrix.length || gridMatrix[y + 1][x] != null){
             return true;
         }
         return false;
     }
-    
+
+    /**
+     * Checks if the falling block would collide if moved in a certain direction.
+     * @param movingDirection direction in which the falling block will move if it doesn't collide
+     * @return tells if falling block will collide or not
+     */
     public boolean doesCollide(Direction movingDirection){
         int[][] checkCoords = new int[fallingBlock.getCoordinates().length][fallingBlock.getCoordinates()[0].length];
         
@@ -202,6 +294,7 @@ public class PetrisGame{
                 if(checkCoords[1][i] + 1 >= gridMatrix.length || gridMatrix[ checkCoords[1][i] + 1 ][ checkCoords[0][i] ]!=null){
                    //here a new block gets created as it fell down to the ground
                    placePento(fallingBlock);
+                   clearRows();
                    return true;
                 }
             }   
@@ -239,26 +332,37 @@ public class PetrisGame{
         }
         return false;
     }
-    
+
+    /**
+     * Places the falling block on the grid
+     * @param aPentomino type of pentomino to be placed
+     */
     public void placePento(Pentomino aPentomino){
             int[][] whereToPlace = aPentomino.getCoordinates();
             Color colorIndex = aPentomino.getColorIndex();
             for(int i = 0; i < whereToPlace[0].length; i++){
                 gridMatrix[whereToPlace[1][i]][whereToPlace[0][i]] = colorIndex;
             }
-            clearRows();          
-            if(!gameOverCheck()) {
+            gameOverCheck();
+            if(isRunning) {
             	spawn();
             }
     }
-    
+
+    /**
+     * Increases the level.
+     */
     public void levelUp() {
     	if(score/level >= 1000){
             level++;
             delay = delay*speedIncrease;
         }
     }
-    
+
+    /**
+     * Finds full rows which has to be cleared.
+     * @return a collection of rows which should be cleared
+     */
     public ArrayList<Integer> rowsToClear(){
         ArrayList<Integer> rowsToClear = new ArrayList<>();
         for(int i = 0; i < gridMatrix.length; i++){
@@ -274,8 +378,10 @@ public class PetrisGame{
         }
         return rowsToClear;
     }
-    
-    
+
+    /**
+     * Clears full rows found by rowsToClear() method.
+     */
     public void clearRows(){
         ArrayList<Integer> rowsToClear = rowsToClear();
         //if there are no rows to clear, then nothing happens (because rowToClear.size = 0)
@@ -364,7 +470,10 @@ public class PetrisGame{
             rowsToClear = rowsToClear();
         }
     }
-    
+
+    /**
+     * A method used for testing.
+     */
     public void testPrint() {
     	int[][] testPentominoCoords = fallingBlock.getCoordinates();
     	System.out.println("The coordinates of the falling Pentomino:");
@@ -382,8 +491,14 @@ public class PetrisGame{
     		System.out.println();
     	}
     }
-    
-    public static int[][] multiplyMatrix(int[][] matrix1, int[][] matrix2){
+
+    /**
+     * Performs matrix multiplication.
+     * @param matrix1 first matrix
+     * @param matrix2 second matrix
+     * @return result of matrix multiplication
+     */
+    public int[][] multiplyMatrix(int[][] matrix1, int[][] matrix2){
 		int[][] matrix = new int[matrix1.length][matrix2[0].length];
 		if (matrix1[0].length != matrix2.length){
 			System.out.println("The sum is illegal - widths or lengths of matrices don't match!");
@@ -459,13 +574,18 @@ public class PetrisGame{
     public double getSpeed(){
         return delay;
     }
-    
-    
+
+    /**
+     * Pauses the game.
+     */
     public void pause() {
     	cycle.pause();
         isRunning = false;
     }
-    
+
+    /**
+     * Runs the game.
+     */
     public void runGame() {
     	isRunning = true;
     	cycle.run();
