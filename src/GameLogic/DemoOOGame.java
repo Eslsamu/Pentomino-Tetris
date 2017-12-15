@@ -4,6 +4,7 @@ import Dynamics.Controlls;
 import Dynamics.GameCycle;
 import GameView.MainView;
 import javafx.scene.paint.Color;
+import OptimalOrder.PentominoGenerator;
 
 /**
  * Class which showcases the optimal ordering, placing the pentominoes appropriately on the board.

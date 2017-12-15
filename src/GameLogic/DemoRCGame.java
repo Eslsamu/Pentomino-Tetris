@@ -4,6 +4,7 @@ import Dynamics.Controlls;
 import Dynamics.GameCycle;
 import GameView.MainView;
 import javafx.scene.paint.Color;
+import OptimalOrder.PentominoGenerator;
 
 /**
  * Class which showcases row clearing, uses a similar approach as DemoOOGame which showcases
