@@ -2,10 +2,15 @@ package Agent;
 
 import java.util.ArrayList;
 
-import GameLogic.DemoBotGame;
+
 import GameLogic.Direction;
 import GameLogic.PetrisGame;
 
+/**
+ * 
+ * @author Samuel
+ *
+ */
 public class DummyAgent extends Agent implements Comparable<DummyAgent>{
 	
 	public int score;
@@ -42,5 +47,4 @@ public class DummyAgent extends Agent implements Comparable<DummyAgent>{
 	public int getScore() {
 		return score;
 	}
-	
 }

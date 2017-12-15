@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
  */
 
 public class DemoBotGame extends PetrisGame{
-	
+
 	private static double[] genes = {2,1,20,0.2,0.2};
     private Agent agent;
     
