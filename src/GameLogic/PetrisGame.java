@@ -100,12 +100,12 @@ public class PetrisGame{
      * Sets up the game.
      */
     public void setupGame() { 
-    	  gridMatrix = new Color[HEIGHT][WIDTH];
-    	  PentominoGenerator startGenerator = new PentominoGenerator();
+    	gridMatrix = new Color[HEIGHT][WIDTH];
+    	PentominoGenerator startGenerator = new PentominoGenerator();
         nextBlock = startGenerator.getRandomPentomino();   
         
         view = new MainView(this);
-    	  cycle = new GameCycle(this);
+    	cycle = new GameCycle(this);
         controlls = new Controlls(this);
         
        isRunning = true;  

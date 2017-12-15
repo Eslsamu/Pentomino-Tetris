@@ -38,7 +38,7 @@ public class TrainEnvironment extends PetrisGame{
 	 * taking more time, but the fitness evaluation becoming
 	 * less random.
 	 */
-	private static final int GAME_ITERATIONS = 25;
+	private static final int GAME_ITERATIONS = 5;
 	/**
 	 * The amount of agents in a population.
 	 */
@@ -95,7 +95,9 @@ public class TrainEnvironment extends PetrisGame{
 			population[i] = new DummyAgent(ranGenes);
 		}
 		
-		for(int g = 0; g < GENERATIONS; g++) {						
+		for(int g = 0; g < GENERATIONS; g++) {		
+			System.out.println("Generation: "+g);
+			
 			//each agent plays x games and their average score is assigned to them
 			for(int i = 0; i < population.length; i ++) {
 				agent = population[i];			
