@@ -16,29 +16,28 @@ import javafx.util.Duration;
 public class GameCycle{
 	
     //two timelines, one updates the game every 60ms, the other drops pento down starting from 500ms
-    private Timeline update;
-    private Timeline gameCycle;
+    protected Timeline update;
+    protected Timeline gameCycle;
     
-    private PetrisGame game;
-    private MainView gui;
+    protected PetrisGame game;
+    protected MainView gui;
     
     public GameCycle(PetrisGame g){
         this.game = g;
-        //create an instance of GUI
     }
     
     public void updateGUI() throws FileNotFoundException, IOException{
         //this method updates the GUI whenever it is called
         //if gameOverCheck() returns false the two timelines will stop therefore the whole game stops
     	
-    	gui = game.getView();
-    	
-        gui.updateMain();
+    	game.updateView();
+        
         if(game.gameOverCheck()){
             //if game is lost stop Timeline and updated board for one last time
             update.stop();
             gameCycle.stop();
             
+            gui = game.getView();
             gui.showGameOver();      
             
         }
@@ -85,6 +84,7 @@ public class GameCycle{
         gameCycle.stop();
         //create a new one
         game.move(Direction.DOWN);
+        
         gameCycle = new Timeline(new KeyFrame(
             Duration.millis(game.getSpeed()),
             ae -> playGame()));

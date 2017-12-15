@@ -3,6 +3,7 @@ package Menu;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.Scene;
+import Agent.TrainEnvironment;
 import GameLogic.DemoBotGame;
 import GameLogic.DemoOOGame;
 import GameLogic.DemoRCGame;
@@ -39,6 +40,11 @@ public class DemoMenuView extends GridPane{
         bot.setMinSize(150, 50);
         bot.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
         
+
+        Button training = new Button("Training");
+        bot.setMinSize(150, 50);
+        bot.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
+
         ToggleGroup group = new ToggleGroup();
         
         RadioButton first = new RadioButton("Initial genes");
@@ -66,11 +72,13 @@ public class DemoMenuView extends GridPane{
         
         setAlignment(Pos.CENTER);
         setHalignment(bot, HPos.CENTER);
+        setHalignment(training, HPos.CENTER);
         setHalignment(optimalOrdering, HPos.CENTER);
         setHalignment(withBot, HPos.CENTER);
         setHalignment(clearRow, HPos.CENTER);
         setHalignment(startMenu, HPos.CENTER);
         setVgap(10);
+        
         
         bot.setOnAction(new EventHandler<ActionEvent>(){
             @Override public void handle(ActionEvent e) {
@@ -117,6 +125,13 @@ public class DemoMenuView extends GridPane{
                }
             }
        });
+        
+        training.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override public void handle(ActionEvent e) {
+                TrainEnvironment te = new TrainEnvironment();              
+             }
+        });
+        
         
         optimalOrdering.setOnAction(new EventHandler<ActionEvent>(){
              @Override public void handle(ActionEvent e) {
@@ -191,13 +206,15 @@ public class DemoMenuView extends GridPane{
         radioButtons.add(first, 0, 0);
         radioButtons.add(perfect, 1, 0);
         radioButtons.add(custom, 2, 0);
+    
         add(bot, 0, 0);
+        add(training, 1,0);
         add(radioButtons, 0, 1);
         add(optimalOrdering, 0, 2);
         add(withBot, 0, 3);
         add(clearRow, 0, 4);
         add(startMenu, 0, 5);
-        
+
 	}
         public Scene setGenes(){
             GridPane setGenes = new GridPane();

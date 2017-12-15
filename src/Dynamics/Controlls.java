@@ -12,13 +12,30 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ Controls class was made to separate handling key events in the game from the rest of the program.
+ It simply describes how different keys pressed by the user influence the game.
+ */
 public class Controlls implements EventHandler<KeyEvent>{
+    /**
+     Game petris game affected by user actions.
+     */
     PetrisGame game;
-    
+
+    /**
+     Constructs a controls object which allows to control an arbitrary petris game.
+     @param g petris game affected by user actions
+     */
     public Controlls(PetrisGame g){
         this.game = g;
     }
-    
+
+
+    /**
+        Determines action according to user's behaviour.
+     @param event key pressed by the user
+     */
+
     @Override
     public void handle(KeyEvent event){
         if(event.getCode() == KeyCode.P){
@@ -45,6 +62,9 @@ public class Controlls implements EventHandler<KeyEvent>{
             primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
             primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
         }
+        /**
+         Keys which change the position of the falling block should only be active while the game is running
+         */
         else if(game.getIsRunning()){
             if(event.getCode() == KeyCode.RIGHT) {
                 game.move(Direction.RIGHT);
