@@ -85,8 +85,7 @@ public class TrainEnvironment extends PetrisGame{
 	 */
 	public void evolve() {
 		//initialize a population of agents
-		DummyAgent[] population = new DummyAgent[POPULATION_SIZE];
-				
+		DummyAgent[] population = new DummyAgent[POPULATION_SIZE];		
 		//assign each individual agent with random genes
 		for(int i = 0; i < population.length; i++) {
 			double[] ranGenes = new double[genes.length];
@@ -101,7 +100,7 @@ public class TrainEnvironment extends PetrisGame{
 			for(int i = 0; i < population.length; i ++) {
 				agent = population[i];			
 				for(int j = 0; j < GAME_ITERATIONS; j++) {
-					restart();
+					restart();		
 					population[i].setScore(population[i].getScore() + (score/GAME_ITERATIONS));
 				}					
 			}
