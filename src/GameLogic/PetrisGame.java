@@ -263,6 +263,7 @@ public class PetrisGame{
             return coords;
     }
 
+
     /**
      * Checks if a square would collide if moved in a certain direction. Used for flood fill algorithm.
      * @param x x-coordinate of the square

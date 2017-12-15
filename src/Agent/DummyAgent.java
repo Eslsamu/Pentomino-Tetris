@@ -46,5 +46,4 @@ public class DummyAgent extends Agent implements Comparable<DummyAgent>{
 	public int getScore() {
 		return score;
 	}
-	
 }
