@@ -57,17 +57,10 @@ public class PentominoGenerator {
      */
         
 	public Pentomino getRandomPentomino(){
-            int index = (int) (Math.random()*12);
-            //exclude background color
-            Color ranColor;
-            do{
-            ranColor = Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*254)); //254 to leave space for an exception store
-            }
-            while(ranColor.equals(Color.rgb(186, 216, 227)));
-            
-            Pentomino random = new Pentomino(pentominoList.get(index),ranColor); 
-                
-            return random;
+		int index = (int) (Math.random()*12);
+		Color ranColor = Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*254)); //254 to leave space for an exception store
+		Pentomino random = new Pentomino(pentominoList.get(index),ranColor); 
+	    return random;
 	}
     /**
      * Method for testing purposes, allowing us to pick a pentomino as the next falling piece ourselves.
@@ -75,12 +68,7 @@ public class PentominoGenerator {
      * @return specific pentominoe accessed with index
      */
 	public Pentomino getTestPentomino(int index){
-            Color ranColor;
-            do{
-            ranColor = Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*254)); //254 to leave space for an exception store
-            }
-            while(ranColor.equals(Color.rgb(186, 216, 227)));
-            
-            return new Pentomino(pentominoList.get(index), ranColor);
+		Color ranColor = Color.rgb((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*254));		
+		return new Pentomino(pentominoList.get(index), ranColor);
 	}
 }
