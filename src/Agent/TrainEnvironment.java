@@ -11,21 +11,64 @@ import GameLogic.PetrisGame;
 
 import javafx.scene.paint.Color;
 
-//A simplified version of the tetris game to train a bot
+/**
+ * The Trainenvironment is a subclass of the PetrisGame 
+ * designed to run without a timer. Constructing this class 
+ * will train an array of genes that function as a parameter 
+ * for the agent.
+ * 
+ * @author Samuel
+ *
+ */
 public class TrainEnvironment extends PetrisGame{
-	
+	/**
+	 * Genetic operator used to maintain diversity in the 
+	 * population. Used in combinition with a random variable.
+	 */
 	private static final double MUTATION_RATE = 0.5;
+	/**
+	 * The amount a gene can mutate.
+	 */
 	private static final double MUTATION_STEP = 0.1;
-	private static final double GENERATIONS = 100;
+	/**
+	 * The amount of iterations a population gets evolved.
+	 */
+	private static final double GENERATIONS = 10;
+	/**
+	 * The amount of games a single agent is playing in 
+	 * a generation. Increasing results to the training 
+	 * taking more time, but the fitness evaluation becoming
+	 * less random.
+	 */
 	private static final int GAME_ITERATIONS = 25;
+	/**
+	 * The amount of agents in a population.
+	 */
 	private static final int POPULATION_SIZE = 50;
+	/**
+	 * The percentage of fit individuals that get selected inside a population
+	 * based on their fitness level and that will recombine.
+	 */
 	private static final double ELITE_RATIO = 0.3;
-	
+	/**
+	 * This variable get's assigned to the current agent playing the PetrisGame
+	 */
 	private DummyAgent agent;
+	/**
+	 * This variable get's assigned to the genes that are predefined in the DemoBotGame class,
+	 * Mainly used to get the length of the gene array.
+	 */
 	private double[] genes;
-	//the genomes that had the best score after all iterations
+	/**
+	 * This variable get's assigned to the fittest individual in a population 
+	 * in each generation.
+	 */
 	private DummyAgent fittestAgent;
-	
+	/**
+	 * The constructor on this point starts the evolution and
+	 * sets the static genes variable of the DBG class to the genes
+	 * of the fittest individual at the end.
+	 */
 	public TrainEnvironment() {
 		super();
 		genes = DemoBotGame.getDNA();
@@ -35,7 +78,11 @@ public class TrainEnvironment extends PetrisGame{
 	}
 	
 	
-	
+	/**
+	 * Essentially generates a population of random agents that will
+	 * iteratively selected to recombine to optimize the score that 
+	 * is archived in a PetrisGame.
+	 */
 	public void evolve() {
 		//initialize a population of agents
 		DummyAgent[] population = new DummyAgent[POPULATION_SIZE];
@@ -115,7 +162,15 @@ public class TrainEnvironment extends PetrisGame{
 		}		
 	}
 	
-	//weighted uniform crossover
+	/**
+	 * Performs a uniform crossover of two individuals that gives
+	 * the fitter gene a higher probability to get selected.
+	 * The gene can be altered via the mutation rate. 
+	 * 
+	 * @param father A randomly or fitness based selected individual of the agent population.
+	 * @param mother There is basically no difference in selecting a mother or father agent.
+	 * @return A new DummyAgent object with recombined genes.
+	 */
 	public DummyAgent procreate(DummyAgent father, DummyAgent mother) {
 		//new genomes are created
 		double[] childGenes = new double[genes.length];
@@ -139,7 +194,11 @@ public class TrainEnvironment extends PetrisGame{
 		return child;
 	}
 	
-	@Override //neither a gamcecycle, view nor controlls are needed
+	/**
+	 * Is called in the super constructor to setup the instance variables for 
+	 * the PetrisGame. Here it does not initialize a view, controlls or a GameCycle.
+	 */
+	@Override 
 	public void setupGame() {
 		gridMatrix = new Color[HEIGHT][WIDTH];
     	PentominoGenerator startGenerator = new PentominoGenerator();
@@ -147,7 +206,11 @@ public class TrainEnvironment extends PetrisGame{
         System.out.println("setup training");
 	}
 	
-	@Override //This method is overridden because we do not need the isRunning variable here
+	/**
+	 * The only difference to the parent class 
+	 * is the absence of the isRunning variable here. 
+	 */
+	@Override 
 	public void spawn() {
 		fallingBlock = nextBlock;
     	PentominoGenerator startGenerator = new PentominoGenerator();
@@ -156,7 +219,12 @@ public class TrainEnvironment extends PetrisGame{
         agent.makeMove(this);
 	}
 	
-	@Override //the agent directly places the falling block on the grid. in some cases a moveDown is still needed though
+	/**
+	 * Again only the absence of the isRunning variable makes the difference.
+	 * Also there is no need to give options for other directions than down
+	 * as the agent directly places the falling block into the grid.
+	 */
+	@Override 
 	public void move(Direction aDirection){
         if(!doesCollide(aDirection)) {
             int[][] changeCoords = fallingBlock.getCoordinates();     		
@@ -166,21 +234,10 @@ public class TrainEnvironment extends PetrisGame{
             fallingBlock.setCoordinates(changeCoords);
         }
 	}
-	
-	@Override //after the block is placed we directly spawn the next block if there is no game over
-	public void placePento(Pentomino aPentomino){
-        int[][] whereToPlace = aPentomino.getCoordinates();
-        Color colorIndex = aPentomino.getColorIndex();
-        for(int i = 0; i < whereToPlace[0].length; i++){
-            gridMatrix[whereToPlace[1][i]][whereToPlace[0][i]] = colorIndex;
-        }
-        clearRows();
-        if(!gameOverCheck()) {
-        	spawn();
-        }
-	}
-	
-	
+	/**
+	 * Again only the absence of the isRunning variable makes the difference.
+	 * And no GameOver statement is printed.
+	 */
 	@Override 
 	 public boolean gameOverCheck() {
         int[][] coordinates = nextBlock.getCoordinates();
