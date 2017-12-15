@@ -21,15 +21,17 @@ public class BotCycle extends GameCycle{
 	@Override 
 	public void playGame(){
 		agent = bgame.getAgent();
-		agent.makeMove();
-        gameCycle.stop();
+		
+		agent.makeMove(bgame);
+		
+        ticker.stop();
+        
         bgame.move(Direction.DOWN);
         
-        gameCycle = new Timeline(new KeyFrame(
+        ticker = new Timeline(new KeyFrame(
             Duration.millis(game.getSpeed()),
             ae -> playGame()));
-        //start it
         
-        gameCycle.play();
+        ticker.play();
     }
 }

@@ -5,8 +5,17 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
+/**
+ * Creates a view of the rules of the game.
+ * 
+ * @author sam, błażej, jordan, yvar stijn, basia
+ */
 public class RulesView extends GridPane{
 	
+        /**
+         * Constructs text nodes with  rules and controls that will be displayed on the grid. 
+         * Sets position and style of the text, and sets the background.
+         */
 	public RulesView() {
 		
 	setMinSize(175, 375);

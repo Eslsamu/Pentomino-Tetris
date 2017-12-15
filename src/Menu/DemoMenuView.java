@@ -5,8 +5,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.Scene;
 import Agent.TrainEnvironment;
 import GameLogic.DemoBotGame;
-import GameLogic.DemoOOGame;
 import GameLogic.DemoRCGame;
+import OptimalOrder.OptimalOrder;
 import Setup.Main;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,53 +14,39 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 	
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * This class creates a menu for the presentation. With options to play the bot, show the optimal order we found
+ * and a sequence of pentominoes to display our clear row.
+ * @author Jordan, Basia, Stijn, Yvar, Sammuel, Blazej
+ */
 public class DemoMenuView extends GridPane{
 	
 	private Main main;
-        private Stage temporaryStage;
 	
+        /**
+         * Constructor creates the menu with Buttons: Bot, Optimal order, Clear row, menu.
+         */
 	public DemoMenuView() {
-	temporaryStage = new Stage();
-            
-        Button bot = new Button("Bot");
+		
+		Button bot = new Button("Bot");
         bot.setMinSize(150, 50);
         bot.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
         
-
-        Button training = new Button("Training");
-        bot.setMinSize(150, 50);
-        bot.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-
-        ToggleGroup group = new ToggleGroup();
-        
-        RadioButton first = new RadioButton("Initial genes");
-        first.setToggleGroup(group);
-        first.setSelected(true);
- 
-        RadioButton perfect = new RadioButton("Improved genes");
-        perfect.setToggleGroup(group);
-        
-        RadioButton custom = new RadioButton("Custom genes");
-        custom.setToggleGroup(group);
+        Button training = new Button("Train Bot");
+        training.setMinSize(150, 50);
+        training.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
         
         Button optimalOrdering = new Button("Optimal ordering");
         optimalOrdering.setMinSize(150, 50);
         optimalOrdering.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-        CheckBox withBot = new CheckBox("with bot");
         
         Button clearRow = new Button("Clearing row");
         clearRow.setMinSize(150, 50);
@@ -71,109 +57,78 @@ public class DemoMenuView extends GridPane{
         startMenu.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
         
         setAlignment(Pos.CENTER);
-        setHalignment(bot, HPos.CENTER);
-        setHalignment(training, HPos.CENTER);
         setHalignment(optimalOrdering, HPos.CENTER);
-        setHalignment(withBot, HPos.CENTER);
         setHalignment(clearRow, HPos.CENTER);
         setHalignment(startMenu, HPos.CENTER);
         setVgap(10);
         
-        
         bot.setOnAction(new EventHandler<ActionEvent>(){
-            @Override public void handle(ActionEvent e) {
-               if(first.isSelected()){
-                   Stage primaryStage = main.getStage();
-                    //create an instance of BackendGrid and use it in GameCycle
-                    DemoBotGame game = new DemoBotGame();
-                    game.spawn();//TODO shouldnt be like this 
-                    game.runGame();
-                    //change Scene to scene from GameCycle
-                    primaryStage.setScene(game.getScene());
+            /**
+             * If button is clicked it will start the bot
+             * @param e ActionEvent, if the button is clicked it will trigger the code
+             */ 
+            @Override
+            public void handle(ActionEvent e) {
+               Stage primaryStage = main.getStage();
+               DemoBotGame game = new DemoBotGame();
+                    game.spawn();
+               game.runGame();
+               primaryStage.setScene(game.getScene());
                     primaryStage.setWidth(650);
-                    primaryStage.setHeight(800);
-
-                    //this following code places the Window in the centr
-                    Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
-               }
-               else if(perfect.isSelected()){
-                   Stage primaryStage = main.getStage();
-                    //create an instance of BackendGrid and use it in GameCycle
-                    DemoBotGame game = new DemoBotGame();
-                    game.spawn();//TODO shouldnt be like this 
-                    game.runGame();
-                    //change Scene to scene from GameCycle
-                    primaryStage.setScene(game.getScene());
-                    primaryStage.setWidth(650);
-                    primaryStage.setHeight(800);
-
-                    //this following code places the Window in the centr
-                    Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                    primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-                    primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
-               }
-               else if(custom.isSelected()){
-                   temporaryStage.setScene(setGenes());
-                   temporaryStage.setWidth(300);
-                   temporaryStage.setHeight(200);
-                   Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                   temporaryStage.setX((primScreenBounds.getWidth() - temporaryStage.getWidth()) / 2);
-                   temporaryStage.setY((primScreenBounds.getHeight() - temporaryStage.getHeight()) / 2);
-                   temporaryStage.show();
-               }
+               primaryStage.setHeight(800);
+               
+               Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+               primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+               primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
             }
        });
         
         training.setOnAction(new EventHandler<ActionEvent>() {
-        	@Override public void handle(ActionEvent e) {
+            /**
+             * Improve bot genes
+             * @param e ActionEvent, if the button is clicked it will trigger the code
+             */
+            @Override 
+            public void handle(ActionEvent e) {
                 TrainEnvironment te = new TrainEnvironment();              
              }
         });
         
-        
         optimalOrdering.setOnAction(new EventHandler<ActionEvent>(){
-             @Override public void handle(ActionEvent e) {
+            /**
+             * If button is clicked it will start optimal ordering
+             * @param e ActionEvent, if the button is clicked it will trigger the code
+             */
+            @Override 
+            public void handle(ActionEvent e) {
                 Stage primaryStage = main.getStage();
-                if(withBot.isSelected()){
-                    //create an instance of BackendGrid and use it in GameCycle
-                    DemoBotGame game = new DemoBotGame(true);
-                    game.spawn();//TODO shouldnt be like this 
-                    game.runGame();
-                    //change Scene to scene from GameCycle
-                    primaryStage.setScene(game.getScene());   
-                }
-                else{
-                    //create an instance of BackendGrid and use it in GameCycle
-                    DemoOOGame game = new DemoOOGame("OptimalOrder");
-                    game.spawn();//TODO shouldnt be like this 
-                    game.runGame();
-                    //change Scene to scene from GameCycle
-                    primaryStage.setScene(game.getScene());
-                }
-                primaryStage.setWidth(650);
+                    OptimalOrder optimalOrder = new OptimalOrder();
+                    
+                    primaryStage.setScene(new Scene(optimalOrder.OptimalOrderView()));
+                    primaryStage.setWidth(650);
                 primaryStage.setHeight(800);
                 
-                //this following code places the Window in the centr
                 Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
                 primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
                 primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
-             }
-        });
+             }});
         
         clearRow.setOnAction(new EventHandler<ActionEvent>(){
-             @Override public void handle(ActionEvent e) {
+            /**
+             * If button is clicked it will start the clear row sequence
+             * @param e ActionEvent, if the button is clicked it will trigger the code
+             */
+            @Override 
+            public void handle(ActionEvent e) {
                 Stage primaryStage = main.getStage();
-                //create an instance of BackendGrid and use it in GameCycle
-                DemoRCGame game = new DemoRCGame("RowClear");
-                game.spawn();//TODO shouldnt be like this 
+                DemoRCGame game = new DemoRCGame("RowClearSequence");
+                game.spawn();
                 game.runGame();
-                //change Scene to scene from GameCycle
+                
                 primaryStage.setScene(game.getScene());
                 primaryStage.setWidth(650);
                 primaryStage.setHeight(800);
-                //this following code places the Window in the centr
+                
                 Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
                 primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
                 primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
@@ -181,6 +136,10 @@ public class DemoMenuView extends GridPane{
         });
         
         startMenu.setOnAction(new EventHandler<ActionEvent>(){
+             /**
+             * If button is clicked it will return to main menu
+             * @param e ActionEvent, if the button is clicked it will trigger the code
+             */
             @Override 
             public void handle(ActionEvent e) {          	
                 Stage primaryStage = main.getStage();
@@ -200,86 +159,17 @@ public class DemoMenuView extends GridPane{
         });
         
         setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, Insets.EMPTY)));
-        GridPane radioButtons = new GridPane();
-        radioButtons.setAlignment(Pos.CENTER);
-        radioButtons.setHgap(10);
-        radioButtons.add(first, 0, 0);
-        radioButtons.add(perfect, 1, 0);
-        radioButtons.add(custom, 2, 0);
-    
-        add(bot, 0, 0);
-        add(training, 1,0);
-        add(radioButtons, 0, 1);
-        add(optimalOrdering, 0, 2);
-        add(withBot, 0, 3);
-        add(clearRow, 0, 4);
-        add(startMenu, 0, 5);
-
+        GridPane botButtons = new GridPane();
+        botButtons.add(bot, 0, 0);
+        botButtons.add(training, 1, 0);
+        botButtons.setAlignment(Pos.CENTER);
+        botButtons.setHalignment(bot, HPos.CENTER);
+        botButtons.setHalignment(training, HPos.CENTER);
+        botButtons.setHgap(15);
+        
+        add(botButtons, 0, 0);
+        add(optimalOrdering, 0, 1);
+        add(clearRow, 0, 2);
+        add(startMenu, 0, 3);
 	}
-        public Scene setGenes(){
-            GridPane setGenes = new GridPane();
-            setGenes.setVgap(10);
-            Label set = new Label("Enter 4 genes:");
-            TextField enter = new TextField();
-            set.setFont(new Font("Arial", 18));
-            Label warning = new Label("Genes must be doubles and separated with space!");
-            warning.setFont(new Font("Arial", 11));
-            warning.setTextFill(Color.DARKRED);
-            enter.setPrefColumnCount(8);
-            Button submit = new Button("Start bot");
-            submit.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-            setGenes.add(set, 0, 0);
-            setGenes.add(enter, 0, 1);
-            setGenes.add(submit, 0, 2);
-            setGenes.setAlignment(Pos.CENTER);
-            setGenes.setHalignment(set, HPos.CENTER);
-            setGenes.setHalignment(enter, HPos.CENTER);
-            setGenes.setHalignment(submit, HPos.CENTER);
-            setGenes.setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, Insets.EMPTY)));
-            
-            submit.setOnAction(new EventHandler<ActionEvent>() {
-             @Override
-                public void handle(ActionEvent e) {
-                    String genesRaw = enter.getText();
-                    String[] genesSplit = genesRaw.split("\\s+");
-                    double[] genes = new double[genesSplit.length];
-                    for(int i = 0; i < genes.length; i++){
-                        try{
-                            genes[i] = Double.parseDouble(genesSplit[i]);
-                        }
-                        catch(Exception ex){
-                            setGenes.getChildren().remove(submit);
-                            setGenes.getChildren().remove(warning);
-                            setGenes.add(warning, 0, 2);
-                            setGenes.add(submit, 0, 3);
-                        }
-                    }
-                    if(genes.length != 4){
-                        setGenes.getChildren().remove(submit);
-                        setGenes.getChildren().remove(warning);
-                        setGenes.add(warning, 0, 2);
-                        setGenes.add(submit, 0, 3);
-                    }
-                    else{
-                        temporaryStage.close();
-                        Stage primaryStage = main.getStage();
-                        //create an instance of BackendGrid and use it in GameCycle
-                        DemoBotGame game = new DemoBotGame(genes);
-                        game.spawn();//TODO shouldnt be like this 
-                        game.runGame();
-                        //change Scene to scene from GameCycle
-                        primaryStage.setScene(game.getScene());
-                        primaryStage.setWidth(650);
-                        primaryStage.setHeight(800);
-
-                        //this following code places the Window in the centr
-                        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                        primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-                        primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
-                    }
-                }    
-            });
-            
-            return new Scene(setGenes);
-        }
 }

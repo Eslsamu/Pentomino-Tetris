@@ -28,10 +28,8 @@ public class ScoreReader {
         return names;
     }
     public void updateFile(int score, String playerName){
-        //if there is no name available it wont add it to highscore
-        if(playerName != null && !playerName.equals("null")){
-            updateFile(score, playerName , getScores(), getNames());
-        }    
+        //update file, we still need a window that will get players name, Stijn is working on it
+        updateFile(score, playerName , getScores(), getNames());
     }
     public String[] readData(){
         String[] data = new String[numberOfScores*3];

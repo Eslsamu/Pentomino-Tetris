@@ -2,19 +2,28 @@ package GameView;
 
 import GameLogic.PetrisGame;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 
+/**
+ *  Creates the view of the pentomino that will be falling next.
+ * 
+ * @author sam, błażej, jordan, yvar stijn, basia
+ */
 public class NextBlockView extends GridPane{
 	
 	PetrisGame game;
 	
+        /**
+         *Constructs the next pentomino that will be falling and sets its position and a label
+         * saying next pentomino. Sets style of the background.
+         * @param g a PetrisGame is a current game.
+         */
 	public NextBlockView(PetrisGame g) {
+            
             game = g;
 
             getChildren().clear();

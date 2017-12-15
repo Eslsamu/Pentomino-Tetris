@@ -20,10 +20,16 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * This class creates scene that asks for player's name.
+ * @author Jordan, Basia, Stijn, Yvar, Sammuel, Blazej
+ */
 public class PlayerNameView extends GridPane{
-
 	private String playerName;
 	
+        /**
+         * Constructor creates the window with TextField, to enter name and a button that will start the game.
+         */
 	public PlayerNameView() {
 				
 	Label enter = new Label("Enter name:");
@@ -47,8 +53,12 @@ public class PlayerNameView extends GridPane{
         setHalignment(submit, HPos.CENTER);
         
         submit.setOnAction(new EventHandler<ActionEvent>() {
-          @Override
-          public void handle(ActionEvent e) {
+            @Override
+            /**
+            * If button is clicked it will check if name is valid, and if yes, it will start the game.
+            * @param e ActionEvent, if the button is clicked it will trigger the code
+            */
+            public void handle(ActionEvent e) {
                 playerName = (String) name.getText();
                 if(playerName.length() == 0){
                     warning.setText("In order to play you should enter a name!");
@@ -65,17 +75,16 @@ public class PlayerNameView extends GridPane{
                     add(submit, 0, 3);
                 }
                 else{
-                    //use the Stage from main class
                     Stage primaryStage = Main.getStage();
-                    //create an instance of BackendGrid and use it in GameCycle
+                    
                     PetrisGame game = new PetrisGame(playerName);
                     game.spawn();
                     game.runGame();
-                    //change Scene to scene from GameCycle
+                    
                     primaryStage.setScene(game.getScene());
                     primaryStage.setWidth(650);
                     primaryStage.setHeight(800);
-                    //this following code places the Window in the centre
+                    
                     Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
                     primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
                     primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
